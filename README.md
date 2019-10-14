@@ -11,9 +11,9 @@
 このアプリはHypothesisと違い、ハイパーテキスト意外にもコメントを付けられるほか、みやすさの改善、いいね機能がついています！
 
 ### メンバー
-プロダクトオーナー：Seiji Nakayama
-
-Takuma Hidaka, Rio Hirai, Ryosuke Saito, Takumi Nakayama
+プロダクトオーナー:Seiji Nakayama
+スクラムマスター  :Takumi Nakayama
+Takuma Hidaka, Rio Hirai, Ryosuke Saito
 
 ### 対応機種
 chrome
