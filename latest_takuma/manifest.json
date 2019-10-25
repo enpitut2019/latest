@@ -1,0 +1,14 @@
+{
+  "name": "Sample",
+  "version": "1.0.4",
+  "manifest_version": 2,
+  "description": "Sample Chrome Extension",
+  "content_scripts": [{
+    "matches": [
+      "file:///Users/apple/Desktop/temporary%20storage/programming/enPit/change_html/latest/test.html"
+    ],
+    "js": [
+      "content.js"
+    ]
+  }]
+}
