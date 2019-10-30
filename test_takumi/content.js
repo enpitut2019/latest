@@ -1,4 +1,12 @@
 window.alert('アプリを開いた');
+//function alert_function() {
+//    window.alert("クリックしたよ!");
+//    console.log("test");
+//}
+var alert_function = function () {
+    window.alert("クリックしたよ!");
+    console.log("test");
+};
 //左クリックするとその位置にボタンが表示される
 document.addEventListener('mouseup', function (ev) {
     var selection = getSelection();
@@ -16,5 +24,5 @@ var r = document.createRange();
 r.setStart(document.body, 0);
 r.setEnd(document.body, 0);
 var h2Node = document.createElement('div');
-h2Node.innerHTML = "<button type=\"button\">ボタン</button>";
+h2Node.innerHTML = "<input type=\"button\" onclick=\"alert_function()\">ボタン</input>";
 r.insertNode(h2Node);
