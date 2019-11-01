@@ -14,6 +14,7 @@ document.addEventListener('mouseup', function (ev) {
     };
     range.deleteContents(); //もともと書かれていたhtml文を消す。
     range.insertNode(newbtn); //rangeに作成したNodeを追加する。
+    selection.removeAllRanges(); //選択範囲のリセット
 }, false);
 //ボタンがWebページにアクセスしたときに一番上に出てくる。------------------------------
 var r = document.createRange(); //rangeを作る
