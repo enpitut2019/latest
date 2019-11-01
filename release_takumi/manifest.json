@@ -1,0 +1,21 @@
+{
+    "name": "Latest",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "description": "Sample Chrome Extension",
+    "permissions":[
+      "contextMenus"
+    ],
+    "background":{
+      "scripts" : ["background.js"],
+      "persistent": true
+    },
+    "content_scripts": [
+      {
+        "matches": [ "http://*/*", "https://*/*" ],
+        "js": [
+          "content.js"
+        ]
+      }
+    ]
+  }
