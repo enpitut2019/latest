@@ -1,0 +1,15 @@
+{
+  "name" : "マウステスト",
+  "version" : "1.1",
+  "description" : "A trivial usage example.",
+  "permissions": ["http://*/*", "https://*/*"],
+  "browser_action": {
+  },"content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "file:///Users/hirairion/Downloads/%E3%83%9E%E3%82%A6%E3%82%B9%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB.htm"],
+      "css":["style.css", "common.css"], 
+      "js": ["jquery.min.js","mouse.js"]
+    }
+],
+  "manifest_version": 2
+}
