@@ -9,7 +9,7 @@ function Make_Pin_Node(id, x, y, z) {
     // ノードの作成
     var new_node = document.createElement("div");
     // idの付与
-    new_node.id = id + "_PIN";
+    new_node.id = make_id(id, "PIN");
     // 位置を付与(absolute)
     new_node.style.position = "absolute";
     new_node.style.left = x + "px";
@@ -23,10 +23,7 @@ function Make_Pin_Node(id, x, y, z) {
         Display_Comment(id);
     };
     // 見た目の設定
-    new_node.style.padding = "10px";
-    new_node.style.marginBottom = "10px";
-    new_node.style.border = "1px solid #333333";
-    new_node.style.backgroundColor = "#ffff99";
+    Set_Style(new_node);
     return new_node;
 }
 /**
@@ -46,17 +43,10 @@ function Make_Comment_Node(id, x, y, z, comment) {
     new_node.style.display = "none";
     // コメントの内容を付与
     new_node.innerHTML = comment;
-    // 初期の位置を付与(absolute)
-    new_node.style.position = "absolute";
-    new_node.style.left = x + "px";
-    new_node.style.top = y + "px";
     // z位置(重なり順を決定)
     new_node.style.zIndex = String(Number(z) + 1);
     // 見た目の設定
-    new_node.style.padding = "10px";
-    new_node.style.marginBottom = "10px";
-    new_node.style.border = "1px solid #333333";
-    new_node.style.backgroundColor = "#ffff99";
+    Set_Style(new_node);
     return new_node;
 }
 /**
@@ -64,45 +54,58 @@ function Make_Comment_Node(id, x, y, z, comment) {
  * @param id 指定したコメントのid属性
  */
 function Display_Comment(id) {
-    $("#" + id + "_PIN").on("click", function (e) {
+    $("#" + make_id(id, "PIN")).on("click", function (e) {
         if ($("#" + id).is(":hidden")) {
-            var mouse_x = e.pageX + 5;
-            var mouse_y = e.pageY + 5;
-            Move_Comment(mouse_x, mouse_y, id);
+            Move_Comment(e.pageX, e.pageY, id);
         }
     });
 }
 /**
  * コメントとバツマークを指定した位置に表示させる。
- * @param mouse_x 指定したx座標
- * @param mouse_y 指定したy座標
- * @param target_id クリックしたPINに対応したコメントのid属性
+ * @param x 指定したx座標
+ * @param y 指定したy座標
+ * @param id クリックしたPINに対応したコメントのid属性
  */
-function Move_Comment(mouse_x, mouse_y, target_id) {
+function Move_Comment(x, y, id) {
     // 対象のidのコメントとそのコメントのバツマークを表示状態に変更
-    $("#" + target_id).show();
-    $("#" + target_id + "_close").show();
+    $("#" + id).show();
+    $("#" + make_id(id, "close")).show();
     // 指定の位置にコメントを移動
-    $("#" + target_id).css({
-        "position": "absolute",
-        "left": mouse_x,
-        "top": mouse_y
-    });
-    // 指定の位置の右上にバツマークを移動
-    var cls_btn_x = mouse_x;
-    var cls_btn_y = mouse_y - 5;
+    Set_Position_jQuery(x, y, id);
+    // バツマークの移動座標を計算
+    var cls_btn_x = x;
     // コメントの幅を取得
-    var target_width = $("#" + target_id).outerWidth(true);
+    var target_width = $("#" + id).outerWidth(true);
     // コメントの幅が取得できればその分右にずらす
     if (target_width != undefined) {
         cls_btn_x += target_width - 5;
     }
-    // バツマークを移動
-    $("#" + target_id + "_close").css({
+    var cls_btn_y = y - 5;
+    // 指定の位置の右上にバツマークを移動
+    Set_Position_jQuery(cls_btn_x, cls_btn_y, make_id(id, "close"));
+}
+/**
+ * 対象となるノードの座標を変更する。
+ * @param x 対象のx座標
+ * @param y 対象のy座標
+ * @param id 対象のid属性
+ */
+function Set_Position_jQuery(x, y, id) {
+    $("#" + id).css({
         "position": "absolute",
-        "left": cls_btn_x,
-        "top": cls_btn_y
+        "left": x,
+        "top": y
     });
+}
+/**
+ * 対象のノードにCSSを追加する
+ * @param node cssを加えたいノード
+ */
+function Set_Style(node) {
+    node.style.padding = "10px";
+    node.style.marginBottom = "10px";
+    node.style.border = "1px solid #333333";
+    node.style.backgroundColor = "#ffff99";
 }
 /**
  * コメントの右上に閉じるボタンを作成
@@ -115,19 +118,11 @@ function Make_Close_Btn_Node(id, x, y, z) {
     // コメントにバツボタンを付与
     var close_node = document.createElement("div");
     // バツボタンにidを付与
-    close_node.id = id + "_close";
+    close_node.id = make_id(id, "close");
     // show()関数でコメントが表示できるようにdisplay属性を付与(defaultはnone)
     close_node.style.display = "none";
     // Xの文字を付与
     close_node.innerHTML = "X";
-    // コメントの幅を取得
-    var node_width = close_node.clientWidth;
-    // バツのx座標をコメントの幅分増量
-    var close_node_x = String(node_width + Number(x));
-    // 初期の位置を付与(absolute)
-    close_node.style.position = "absolute";
-    close_node.style.left = close_node_x + "px";
-    close_node.style.top = y + "px";
     // z位置(重なり順を決定)
     close_node.style.zIndex = String(Number(z) + 2);
     // バツボタンをクリックしたときの関数を追加
@@ -143,16 +138,34 @@ function Make_Close_Btn_Node(id, x, y, z) {
 function Close_Comment(id) {
     if ($("#" + id).is(":visible")) {
         $("#" + id).hide();
-        $("#" + id + "_close").hide();
+        $("#" + make_id(id, "close")).hide();
     }
 }
-function add_HTML(id, x, y) {
+/**
+ * 指定したidのclose-idやPIN-idを返す
+ * @param id コメントのid
+ * @param add_id 追加したいid("close"or"PIN")
+ */
+function make_id(id, add_id) {
+    return id + "_" + add_id;
+}
+/**
+ * ピン・コメント(非表示)・閉じるボタン(非表示)をHTML内に追加
+ * id = "コメントのid"
+ * ピンのid => id+"_PIN"
+ * コメントのid => id
+ * 閉じるボタンのid => id+"_close"
+ * @param id コメントに与えるid属性
+ * @param x ピンが立つx座標(最左が0)
+ * @param y ピンが立つy座標(最上が0)
+ */
+function Create_PIN(id, x, y, comment) {
     // 重なり位置を指定
-    var z = "100";
+    var z = "10000";
     // ピンを作成
     var new_pin = Make_Pin_Node(id, x, y, z);
     // コメント(初期設定:非表示)を作成
-    var new_comment = Make_Comment_Node(id, "0", "0", z, "コメント");
+    var new_comment = Make_Comment_Node(id, "0", "0", z, comment);
     // 閉じるボタン(初期設定:非表示)を作成
     var cls_btn = Make_Close_Btn_Node(id, "0", "0", z);
     //bodyに追加する。
@@ -161,8 +174,30 @@ function add_HTML(id, x, y) {
     document.body.appendChild(cls_btn);
 }
 /**
- * サイトを読み込んだときに実行
+ * 読み込んだときに既にあるピンを表示する関数
+ */
+function Display_PIN() {
+    /*
+    サーバーから情報を読み込む
+    読み込んだ内容を１つずつ取り出してCreate_PIN()にいれる。
+    */
+    var load_comments = Load_Comment();
+    var id = load_comments[0].id;
+    var x = load_comments[0].x;
+    var y = load_comments[0].y;
+    var comment = load_comments[0].comment;
+    Create_PIN(id, x, y, comment);
+}
+/**
+ * サーバーから情報を読み込む
+ */
+function Load_Comment() {
+    // 何らかの操作でサーバから値を取得
+    return [{ id: "Comment1", x: "100", y: "100", comment: "コメント" }];
+}
+/*
+    サイトを読み込んだときに実行
 */
 window.onload = function () {
-    add_HTML("Comment1", "100", "100");
+    this.Display_PIN();
 };
