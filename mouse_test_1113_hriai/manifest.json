@@ -1,0 +1,22 @@
+{
+    "name": "Latest",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "description": "Sample Chrome Extension",
+    "permissions":[
+      "contextMenus"
+    ],
+    "background":{
+      "scripts" : ["background.js"],
+      "persistent": true
+    },
+    "content_scripts": [
+      {
+        "matches": [ "http://*/*", "https://*/*","file:///Users/hirairion/Downloads/%E3%83%9E%E3%82%A6%E3%82%B9.htm" ],
+        "css": ["style.css","common.css"],
+        "js": [
+          "jquery.min.js","content.js"
+        ]
+      }
+    ]
+  }

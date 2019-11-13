@@ -1,0 +1,9 @@
+参考にしたサイト
+・サイト内にモザイクをかける拡張機能の作り方
+https://qiita.com/euno_eng/items/b58e8da55e46bb0a2775
+・Rangeの活用とSelection
+https://uhyohyo.net/javascript/8_3.html
+・Rangeのプロパティ
+https://developer.mozilla.org/ja/docs/Web/API/range
+・Range.insertNode()の説明サイト
+https://lab.syncer.jp/Web/API_Interface/Reference/IDL/Range/insertNode/
