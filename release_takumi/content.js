@@ -1,5 +1,17 @@
 //選択した範囲をボタンにする-----------------------------------------------------------
 //課題：h1タグとかも全部平文にしてしまうからwebページのスタイルを壊すことになる。
+//chromeストレージからコメントを読み込む関数
+function ReadComment(key) {
+    chrome.storage.sync.get(['key'], function (result) {
+        console.log('Value currently is ' + result.key);
+    });
+}
+//chromeストレージにコメントを書き込む関数
+function WriteComment(key, value) {
+    chrome.storage.sync.set({ key: value }, function () {
+        console.log('Value is set to ' + value);
+    });
+}
 document.addEventListener('mouseup', function (ev) {
     var selection = window.getSelection(); //選択範囲を取得
     if (!selection.rangeCount)
@@ -10,7 +22,9 @@ document.addEventListener('mouseup', function (ev) {
     //Nodeのcssスタイルを変更する
     newbtn.style.cssText = "background-color:black;color:white;cursor:pointer;";
     newbtn.onclick = function () {
-        window.alert('クリックした'); //クリックされたらアラートを出す
+        // 入力ダイアログを表示 ＋ 入力内容を user に代入
+        var comment = window.prompt("コメントを入力してください", "");
+        WriteComment("text.txt", comment);
     };
     range.deleteContents(); //もともと書かれていたhtml文を消す。
     range.insertNode(newbtn); //rangeに作成したNodeを追加する。
@@ -25,7 +39,8 @@ var btn = document.createElement('button');
 btn.type = 'button';
 btn.textContent = 'ここにボタンの名前';
 btn.onclick = function () {
-    window.alert('クリックした');
+    var text = ReadComment("text.txt");
+    console.log(text);
 };
 //ボタンの挿入----------------------------------------------------------------
 r.insertNode(btn);
