@@ -212,14 +212,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
  * 状態を変更するための関数
  * @param flag 状態を確認するフラッグ
  */
-function Change_Mode(flag) {
-    if (flag) {
-        return false;
+/*function Change_Mode(flag: boolean){
+    if (flag){
+        return false
+    }else{
+        return true
     }
-    else {
-        return true;
-    }
-}
+}*/
 /**
  * PIN及びコメントを作成
  * @param x PINのx座標
@@ -251,6 +250,7 @@ function Save_PIN(id, x, y, comment) {
 window.onload = function () {
     this.Display_PIN();
 };
+var once = true;
 /*
     ページ内でクリックした場合にピンを作成。コメントも同時に作成する。
     現在は１つだけ書き込める形になっている。
@@ -260,7 +260,10 @@ $("body").on("click", function (e) {
         // 書き込みモードを解除(?)(書き込みをスタートさせる方法にもよる)
         // flag = Change_Mode(flag)
         // 書き込みモードならPIN・コメントを作成
-        Make_PIN(String(e.pageX), String(e.pageY));
+        if (once) {
+            Make_PIN(String(e.pageX), String(e.pageY));
+            once = false;
+        }
         // 本来であれば書き込みモードを再開(?)(上と同様に)
         // Change_Mode(flag)
     }
