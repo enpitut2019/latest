@@ -25,6 +25,9 @@ function Make_Pin_Node(id: string, x: string, y: string, z: string): Node{
     // 見た目の設定
     Set_Style(new_node)
 
+    //追加。カーソルが重なるとポインターになる
+    new_node.style.cursor = "pointer"
+
     return new_node
 }
 
@@ -139,6 +142,9 @@ function Make_Close_Btn_Node(id: string, x: string, y: string, z: string) :Node{
     close_node.onclick = function(){
         Close_Comment(id)
     }
+
+    //追加。カーソルが重なるとポインターになる
+    close_node.style.cursor = "pointer"
 
     return close_node
 }
