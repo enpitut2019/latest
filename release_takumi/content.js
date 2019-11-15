@@ -1,5 +1,14 @@
-//選択した範囲をボタンにする-----------------------------------------------------------
-//課題：h1タグとかも全部平文にしてしまうからwebページのスタイルを壊すことになる。
+//background.jsから送られたメッセージで機能を変更する
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    //Actionのメッセージが来たら0をstart関数に渡す。
+    if (request.command == "Action") {
+        start(0);
+    }
+    //Stopのメッセージが来たら1をstart関数に渡す。
+    if (request.command == "Stop") {
+        start(1);
+    }
+});
 //chromeストレージからコメントを読み込む関数
 function ReadComment(key) {
     chrome.storage.sync.get(['key'], function (result) {
@@ -12,7 +21,10 @@ function WriteComment(key, value) {
         console.log('Value is set to ' + value);
     });
 }
-document.addEventListener('mouseup', function (ev) {
+//ここに実行する関数を書く
+//選択した範囲をボタンにする-----------------------------------------------------------
+//課題：h1タグとかも全部平文にしてしまうからwebページのスタイルを壊すことになる。
+function select() {
     var selection = window.getSelection(); //選択範囲を取得
     if (!selection.rangeCount)
         return; //選択範囲がなかったら関数を出る
@@ -22,25 +34,20 @@ document.addEventListener('mouseup', function (ev) {
     //Nodeのcssスタイルを変更する
     newbtn.style.cssText = "background-color:black;color:white;cursor:pointer;";
     newbtn.onclick = function () {
-        // 入力ダイアログを表示 ＋ 入力内容を user に代入
-        var comment = window.prompt("コメントを入力してください", "");
-        WriteComment("text.txt", comment);
+        window.alert('クリックした'); //クリックされたらアラートを出す
     };
     range.deleteContents(); //もともと書かれていたhtml文を消す。
     range.insertNode(newbtn); //rangeに作成したNodeを追加する。
     selection.removeAllRanges(); //選択範囲のリセット
-}, false);
-//ボタンがWebページにアクセスしたときに一番上に出てくる。------------------------------
-var r = document.createRange(); //rangeを作る
-r.setStart(document.body, 0); //rangeの開始位置を設定
-r.setEnd(document.body, 0); //rangeの終了位置を設定
-//関数が設定できるボタンの実装-----------------------------------------------------
-var btn = document.createElement('button');
-btn.type = 'button';
-btn.textContent = 'ここにボタンの名前';
-btn.onclick = function () {
-    var text = ReadComment("text.txt");
-    console.log(text);
-};
-//ボタンの挿入----------------------------------------------------------------
-r.insertNode(btn);
+}
+//実行する関数のon/offを切り替えるための関数-------------------------------------------
+function start(account) {
+    if (account % 2 == 0) {
+        //送られてきた値が0であるならmouseupイベントをselect関数に追加
+        document.addEventListener('mouseup', select, false);
+    }
+    else {
+        //送られてきた値が1であるならmouseupイベントをselect関数から削除
+        document.removeEventListener('mouseup', select, false);
+    }
+}
