@@ -1,0 +1,24 @@
+{
+    "name": "Latest_Debug",
+    "version": "0.1.7.5",
+    "manifest_version": 2,
+    "description": "サイトにコメントを付与したり、追加したりする事ができる拡張です",
+    "permissions":[
+      "contextMenus",
+      "tabs",
+      "background",
+      "http://*/*",
+      "https://*/*",
+      "storage"
+    ],
+    "content_scripts": [{
+      "matches": [
+        "https://*/*", 
+        "http://*/*"
+      ],
+      "js": [
+        "jquery.min.js", 
+        "content.js"
+      ]
+    }]
+  }
