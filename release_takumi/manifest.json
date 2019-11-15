@@ -3,20 +3,28 @@
     "version": "1.0.0",
     "manifest_version": 2,
     "description": "Sample Chrome Extension",
+    "icons":{
+          "32": "icon_off.png"
+    },
     "permissions":[
       "contextMenus",
-      "storage"
+      "tabs",
+      "background",
+      "http://*/*",
+      "https://*/*"
     ],
+    "browser_action":{
+          "default_icon": "icon_off.png",
+          "default_title": "Latestを起動する"
+    },
     "background":{
       "scripts" : ["background.js"],
-      "persistent": true
+      "persistent": false
     },
     "content_scripts": [
       {
-        "matches": [ "http://*/*", "https://*/*" ],
-        "js": [
-          "content.js"
-        ]
+        "matches": [ "<all_urls>" ],
+        "js": ["content.js"]
       }
     ]
   }
