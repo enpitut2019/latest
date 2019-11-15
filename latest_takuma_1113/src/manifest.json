@@ -1,0 +1,32 @@
+{
+    "name": "Latest_Debug",
+    "version": "0.1.8",
+    "manifest_version": 2,
+    "description": "サイトにコメントを付与したり、追加したりする事ができる拡張です",
+    "icons":{
+      "32": "icon_off.png"
+    },
+    "permissions":[
+      "contextMenus",
+      "tabs",
+      "background",
+      "http://*/*",
+      "https://*/*"
+    ],
+    "browser_action":{
+      "default_icon": "icon_off.png",
+      "default_title": "Latestを起動する"
+    },
+    "background":{
+      "scripts" : ["background.js"],
+      "persistent": false
+    },
+    "content_scripts": [{
+      "matches": [
+        "https://*/*", "http://*/*"
+      ],
+      "js": [
+        "jquery.min.js", "content.js"
+      ]
+    }]
+  }
