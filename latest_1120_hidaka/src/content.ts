@@ -215,19 +215,32 @@ function Load_Comment() :[{id: string, x: string, y: string, comment: string}]{
 }
 
 // 本来であればモードチェンジができるようにしたい
-var flag = true
+var flag = false
+
+//background.jsから送られたメッセージで機能を変更する
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+    //Actionのメッセージが来たら0をstart関数に渡す。
+    if (request.command == "Action") {
+        flag = true
+    }
+    //Stopのメッセージが来たら1をstart関数に渡す。
+    if (request.command == "Stop"){
+        flag = false
+    }
+});
+
 
 /**
  * 状態を変更するための関数
  * @param flag 状態を確認するフラッグ
  */
-function Change_Mode(flag: boolean){
+/*function Change_Mode(flag: boolean){
     if (flag){
         return false
     }else{
         return true
     }
-}
+}*/
 
 /**
  * PIN及びコメントを作成
@@ -263,6 +276,8 @@ window.onload = function(){
     this.Display_PIN()
 }
 
+var once = true
+
 /*
     ページ内でクリックした場合にピンを作成。コメントも同時に作成する。
     現在は１つだけ書き込める形になっている。
@@ -270,9 +285,12 @@ window.onload = function(){
 $("body").on("click", function(e){
     if(flag){
         // 書き込みモードを解除(?)(書き込みをスタートさせる方法にもよる)
-        flag = Change_Mode(flag)
+        // flag = Change_Mode(flag)
         // 書き込みモードならPIN・コメントを作成
-        Make_PIN(String(e.pageX), String(e.pageY))
+        if (once){
+            Make_PIN(String(e.pageX), String(e.pageY))
+            once = false
+        }
         // 本来であれば書き込みモードを再開(?)(上と同様に)
         // Change_Mode(flag)
     }
