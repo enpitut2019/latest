@@ -6,7 +6,7 @@
 > * [各ディレクトリの説明](#各ディレクトリの説明)
 > * [manifest.jsonについて](#manifest.jsonについて)
 
-# googlechromeに読み込む時  
+# GoogleChromeに読み込む時  
 * Latestディレクトリを読み込んでください
 
 # コンパイルについて
