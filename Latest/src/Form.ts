@@ -78,7 +78,7 @@ class Form{
                 // コメントを作成
                 comment_manager.creteNewComments(String(e.pageX), String(e.pageY), "1000", tmp_comment)
                 $(this).dialog('close');
-                $("#latest_div").remove()
+                $("#latest_div").remove();
                 // 書き込みモードを再開
                 mode.Change_mode("write")
                 }

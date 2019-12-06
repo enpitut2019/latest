@@ -1,8 +1,10 @@
 class Mode{
     flag: string;
+    form_unmake: boolean;
 
     constructor(){
         this.flag = "read";
+        this.form_unmake = true;
     }
 
     /**
@@ -25,6 +27,14 @@ class Mode{
             return true
         }else{
             return false
+        }
+    }
+
+    Change_unmake(){
+        if(this.form_unmake){
+            this.form_unmake = false;
+        }else{
+            this.form_unmake = true;
         }
     }
 }

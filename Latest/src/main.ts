@@ -27,6 +27,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 $("body").on("click", function(e){
     // 書き込みモードならPIN・コメントを作成
     if(mode.Judge_mode("write")){
-        form.make_form(comment_manager, e)
+        if (mode.form_unmake){
+            form.make_form(comment_manager, e)
+        }
+        mode.Change_unmake()
     }
 });

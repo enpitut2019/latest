@@ -365,6 +365,7 @@ var DB = /** @class */ (function () {
 var Mode = /** @class */ (function () {
     function Mode() {
         this.flag = "read";
+        this.form_unmake = true;
     }
     /**
      * 状態を変更するための関数
@@ -386,6 +387,14 @@ var Mode = /** @class */ (function () {
         }
         else {
             return false;
+        }
+    };
+    Mode.prototype.Change_unmake = function () {
+        if (this.form_unmake) {
+            this.form_unmake = false;
+        }
+        else {
+            this.form_unmake = true;
         }
     };
     return Mode;
@@ -536,6 +545,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 $("body").on("click", function (e) {
     // 書き込みモードならPIN・コメントを作成
     if (mode.Judge_mode("write")) {
-        form.make_form(comment_manager, e);
+        if (mode.form_unmake) {
+            form.make_form(comment_manager, e);
+        }
+        mode.Change_unmake();
     }
 });
