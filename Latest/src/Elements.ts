@@ -328,7 +328,7 @@ class CommentManager{
     
     private db: DB
     private manageid: ManageID
-
+    
     /**
      * db関係の変数を渡す。
      */
