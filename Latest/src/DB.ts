@@ -1,24 +1,23 @@
 class DB{
 
-    url: string;
-    info: Array<{id: string, x: string, y: string, comment: string, url: string}>;
+    urlmanage: URLManage;
     
     /**
      * 何かしらdbに接続するためのステータスをセットする
      */
     constructor(){
-        this.url = "https://stark-coast-28712.herokuapp.com/comments"
-        this.info = []
+        this.urlmanage = new URLManage()
     }
 
     /**
      * サーバーから情報を読み込む
     */
-    Load_Comment(current_url: string) :Promise<Array<{}>>{
-        let server_url = this.url + "/get_from_url";
+    Load_Comment() :Promise<Array<{}>>{
+        let server_url = this.urlmanage.get_url_get_from_url();
+        let current_url = this.urlmanage.current_url
         var info = [{}]
         return new Promise(function (resolve) {
-            $.ajax({    
+            $.ajax({
                 type: 'GET',
                 url: server_url,
                 data: {
@@ -27,7 +26,7 @@ class DB{
                 dataType: 'text'
             }).done(function (data: string){
                 console.log(data);
-                JSON.parse(data).forEach(e => {
+                JSON.parse(data).forEach((e: { node_id: string; x: string; y: string; comment: string; url: string; }) => {
                     info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
                 });
                 resolve(info)
@@ -42,18 +41,18 @@ class DB{
      * @param y PINのy座標
      * @param comment コメントの内容
      */
-    Save_PIN(id: string, x: string, y: string, comment: string, url: string) {
+    Save_PIN(id: string, x: string, y: string, comment: string) {
         // サーバに形式を整えて送信 
         $.ajax({
             type: 'POST',
-            url: this.url,
+            url: this.urlmanage.current_url,
             data: {
                 comment: {
                     node_id: id,
                     x: x,
                     y: y,
                     comment: comment,
-                    url: url
+                    url: this.urlmanage.current_url
                 }
             }
         })

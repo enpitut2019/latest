@@ -313,14 +313,12 @@ class CommentManager {
     */
     loadComment() {
         let createComments = this.createComments;
-        console.log("start_load");
         this.db.Load_Comment(this.current_url)
             .then(function (e) {
             e.forEach(e => {
                 createComments(e.id, e.x, e.y, "1000", e.comment, e.url);
             });
         });
-        console.log("end_load");
     }
 }
 class DB {
@@ -379,12 +377,6 @@ class DB {
             .done(function (data) {
             console.log(data);
         });
-        /*
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', this.url);
-        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-        xhr.send( 'comment[node_id]=' + id + '&comment[x]=' + x + '&comment[y]=' + y + '&comment[comment]=' + comment + '&comment[url]=' + url );
-        */
     }
 }
 class Mode {
@@ -555,6 +547,7 @@ let form = new Form();
     サイトを読み込んだときに実行
 */
 window.onload = function () {
+    console.log(location.href);
     comment_manager.loadComment();
 };
 //background.jsから送られたメッセージで機能を変更する

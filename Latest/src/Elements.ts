@@ -370,7 +370,7 @@ class CommentManager{
         node.createComments()
         node.appendComments()
         node.set_CurrentURL()
-        this.db.Save_PIN(id, x, y, comment, node.url)
+        this.db.Save_PIN(id, x, y, comment)
     }
 
     /*
@@ -379,14 +379,11 @@ class CommentManager{
     */
     loadComment(){
         let createComments = this.createComments
-        console.log("start_load");
-        this.db.Load_Comment(this.current_url)    
+        this.db.Load_Comment()    
         .then(function(e: Array<any>) {
             e.forEach(e => {
                 createComments(e.id, e.x, e.y, "1000", e.comment, e.url)
             });
         });
-        
-        console.log("end_load");
     }
 }
