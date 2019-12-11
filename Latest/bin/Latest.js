@@ -335,46 +335,24 @@ class DB {
      * サーバーから情報を読み込む
     */
     Load_Comment(current_url) {
-        let server_url = this.url;
+        let server_url = this.url + "/get_from_url";
         var info = [{}];
         return new Promise(function (resolve) {
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', server_url);
-            xhr.send();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    console.log(xhr.responseText);
-                    JSON.parse(xhr.responseText || "null").forEach(e => {
-                        info.push({ id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url });
-                    });
-                    resolve(info);
-                }
-            };
-        });
-        /*
-        this.xhr.open('GET', this.url);
-        this.xhr.send()
-        console.log(this.xhr.status);
-        if(this.xhr.readyState == 4 && this.xhr.status == 200){
-            console.log(this.xhr.status)
-            JSON.parse(this.xhr.responseText).forEach(e => {
-                this.info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
-            });
-        }
-        $.ajax({
-            url: this.url,
-            type: "GET",
-            data: String,
-            async: false,
-            success: function(json:string){
-                console.log(json)
-                JSON.parse(json || "null").forEach(e => {
-                    this.info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
+            $.ajax({
+                type: 'GET',
+                url: server_url,
+                data: {
+                    url: current_url
+                },
+                dataType: 'text'
+            }).done(function (data) {
+                console.log(data);
+                JSON.parse(data).forEach(e => {
+                    info.push({ id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url });
                 });
-            }
-        })
-        return this.info
-        */
+                resolve(info);
+            });
+        });
     }
     /**
      * 作成したPIN及びコメントをサーバに形式を整えて送信し、保存
@@ -385,10 +363,28 @@ class DB {
      */
     Save_PIN(id, x, y, comment, url) {
         // サーバに形式を整えて送信 
+        $.ajax({
+            type: 'POST',
+            url: this.url,
+            data: {
+                comment: {
+                    node_id: id,
+                    x: x,
+                    y: y,
+                    comment: comment,
+                    url: url
+                }
+            }
+        })
+            .done(function (data) {
+            console.log(data);
+        });
+        /*
         let xhr = new XMLHttpRequest();
         xhr.open('POST', this.url);
         xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-        xhr.send('comment[node_id]=' + id + '&comment[x]=' + x + '&comment[y]=' + y + '&comment[comment]=' + comment + '&comment[url]=' + url);
+        xhr.send( 'comment[node_id]=' + id + '&comment[x]=' + x + '&comment[y]=' + y + '&comment[comment]=' + comment + '&comment[url]=' + url );
+        */
     }
 }
 class Mode {
