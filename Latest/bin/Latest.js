@@ -19,11 +19,13 @@ var HTML_Element = /** @class */ (function () {
      * elementを作成する。(idとzは必ず指定する)
      * @param id elementがもつid属性
      * @param z 重なり順
+     * @param url コメントのurl(作成時は""でok)
      * @param type elementのタイプ("PIN"や"close")
      * @param element_type elementの属性(基本的に"div")
      * @param click_function クリックしたときに発動する関数(指定しなくても良い)
      */
-    function HTML_Element(id, z, type, element_type) {
+    function HTML_Element(id, z, url, type, element_type) {
+        if (url === void 0) { url = ""; }
         if (type === void 0) { type = ""; }
         if (element_type === void 0) { element_type = "div"; }
         // elementの作成
@@ -33,6 +35,7 @@ var HTML_Element = /** @class */ (function () {
         this.z = z;
         this.type = type;
         this.element_type = type;
+        this.url = url;
     }
     HTML_Element.prototype.set_Value = function () {
         // idの付与
@@ -89,6 +92,9 @@ var HTML_Element = /** @class */ (function () {
         if (image === void 0) { image = ""; }
         this.node.innerHTML = image;
     };
+    HTML_Element.prototype.set_CurrentURL = function () {
+        this.url = location.origin;
+    };
     /**
     * 指定したidのclose-idやPIN-idを返す
     * @param id コメントのid
@@ -114,8 +120,9 @@ var PIN_Node = /** @class */ (function (_super) {
      * @param y pin-nodeのy座標
      * @param z pin-nodeのz座標
      */
-    function PIN_Node(id, x, y, z, set_function) {
-        var _this = _super.call(this, id, z, "PIN", "div") || this;
+    function PIN_Node(id, x, y, z, set_function, url) {
+        if (url === void 0) { url = ""; }
+        var _this = _super.call(this, id, z, url, "PIN", "div") || this;
         _this.x = x;
         _this.y = y;
         _this.set_function = set_function;
@@ -150,7 +157,8 @@ var PIN_Node = /** @class */ (function (_super) {
  */
 var Comment_Node = /** @class */ (function (_super) {
     __extends(Comment_Node, _super);
-    function Comment_Node(id, z, comment) {
+    function Comment_Node(id, z, comment, url) {
+        if (url === void 0) { url = ""; }
         var _this = _super.call(this, id, z) || this;
         _this.comment = comment;
         _this.add_zindex = 1;
@@ -173,7 +181,8 @@ var Comment_Node = /** @class */ (function (_super) {
  */
 var Close_Node = /** @class */ (function (_super) {
     __extends(Close_Node, _super);
-    function Close_Node(id, z, set_function) {
+    function Close_Node(id, z, set_function, url) {
+        if (url === void 0) { url = ""; }
         var _this = _super.call(this, id, z, "close", "div") || this;
         _this.add_zindex = 2;
         _this.set_function = set_function;
@@ -203,16 +212,18 @@ var Comments = /** @class */ (function () {
      * @param z pinノードのz座標(重なり順)
      * @param comment commentノードに表示するコメント内容
      */
-    function Comments(id, x, y, z, comment) {
+    function Comments(id, x, y, z, comment, url) {
         if (z === void 0) { z = "1000"; }
-        this.comment_node = new Comment_Node(id, z, comment);
-        this.cls_node = new Close_Node(id, z, this.close_comment.bind(this));
-        this.pin_node = new PIN_Node(id, x, y, z, this.Display_Comment.bind(this));
+        if (url === void 0) { url = ""; }
+        this.comment_node = new Comment_Node(id, z, comment, url);
+        this.cls_node = new Close_Node(id, z, this.close_comment.bind(this), url);
+        this.pin_node = new PIN_Node(id, x, y, z, this.Display_Comment.bind(this), url);
         this.id = id;
         this.x = x;
         this.y = y;
         this.z = z;
         this.comment = comment;
+        this.url = url;
     }
     /**
      * 各ノードを作成する。
@@ -231,11 +242,13 @@ var Comments = /** @class */ (function () {
         document.body.appendChild(this.pin_node.node);
     };
     /**
-     * 新しいノードをサイトに追加した後、データベースに追加する
+     * コメントを新規作成時に実行。各ノードに現在のURLを格納
      */
-    Comments.prototype.createNewComments = function (db) {
-        this.createComments();
-        db.Save_PIN(this.id, this.x, this.y, this.comment);
+    Comments.prototype.set_CurrentURL = function () {
+        this.comment_node.set_CurrentURL();
+        this.cls_node.set_CurrentURL();
+        this.pin_node.set_CurrentURL();
+        this.url = location.origin;
     };
     /**
     * コメントを表示させる関数
@@ -303,13 +316,14 @@ var CommentManager = /** @class */ (function () {
     function CommentManager() {
         this.db = new DB();
         this.manageid = new ManageID();
+        this.current_url = location.origin;
     }
     /**
      * 各ノードを作成する。
      */
-    CommentManager.prototype.createComments = function (id, x, y, z, comment) {
+    CommentManager.prototype.createComments = function (id, x, y, z, comment, url) {
         if (z === void 0) { z = "1000"; }
-        var node = new Comments(id, x, y, z, comment);
+        var node = new Comments(id, x, y, z, comment, url);
         node.createComments();
         node.appendComments();
     };
@@ -322,7 +336,8 @@ var CommentManager = /** @class */ (function () {
         var node = new Comments(id, x, y, z, comment);
         node.createComments();
         node.appendComments();
-        this.db.Save_PIN(id, x, y, comment);
+        node.set_CurrentURL();
+        this.db.Save_PIN(id, x, y, comment, node.url);
     };
     /*
     サーバーから情報を読み込む
@@ -330,10 +345,13 @@ var CommentManager = /** @class */ (function () {
     */
     CommentManager.prototype.loadComment = function () {
         var _this = this;
-        var load_comments = this.db.Load_Comment();
+        var load_comments = this.db.Load_Comment(this.current_url);
+        console.log("start_load");
         load_comments.forEach(function (e) {
-            _this.createComments(e.id, e.x, e.y, "1000", e.comment);
+            console.log(e);
+            _this.createComments(e.id, e.x, e.y, "1000", e.comment, e.url);
         });
+        console.log("end_load");
     };
     return CommentManager;
 }());
@@ -342,13 +360,37 @@ var DB = /** @class */ (function () {
      * 何かしらdbに接続するためのステータスをセットする
      */
     function DB() {
+        this.url = "http://localhost:3000/comments";
+        this.info = [];
     }
     /**
      * サーバーから情報を読み込む
     */
-    DB.prototype.Load_Comment = function () {
-        // 何らかの操作でサーバから値を取得
-        return [{ id: "Comment1", x: "100", y: "100", comment: "コメント" }];
+    DB.prototype.Load_Comment = function (current_url) {
+        /*
+        this.xhr.open('GET', this.url);
+        this.xhr.send()
+        console.log(this.xhr.status);
+        if(this.xhr.readyState == 4 && this.xhr.status == 200){
+            console.log(this.xhr.status)
+            JSON.parse(this.xhr.responseText).forEach(e => {
+                this.info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
+            });
+        }*/
+        $.ajax({
+            url: this.url,
+            type: "GET",
+            data: String,
+            async: false,
+            success: function (json) {
+                var _this = this;
+                console.log(json);
+                JSON.parse(json || "null").forEach(function (e) {
+                    _this.info.push({ id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url });
+                });
+            }
+        });
+        return this.info;
     };
     /**
      * 作成したPIN及びコメントをサーバに形式を整えて送信し、保存
@@ -357,7 +399,7 @@ var DB = /** @class */ (function () {
      * @param y PINのy座標
      * @param comment コメントの内容
      */
-    DB.prototype.Save_PIN = function (id, x, y, comment) {
+    DB.prototype.Save_PIN = function (id, x, y, comment, url) {
         // サーバに形式を整えて送信 
     };
     return DB;
@@ -536,7 +578,9 @@ var form = new Form();
     サイトを読み込んだときに実行
 */
 window.onload = function () {
+    console.log("start_function");
     comment_manager.loadComment();
+    console.log("end_function");
 };
 //background.jsから送られたメッセージで機能を変更する
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {

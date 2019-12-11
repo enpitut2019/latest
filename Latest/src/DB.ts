@@ -1,18 +1,43 @@
 class DB{
 
+    url: string;
+    info: Array<{id: string, x: string, y: string, comment: string, url: string}>;
+
     /**
      * 何かしらdbに接続するためのステータスをセットする
      */
     constructor(){
-
+        this.url = "http://localhost:3000/comments"
+        this.info = []
     }
 
     /**
      * サーバーから情報を読み込む
     */
-    Load_Comment() :[{id: string, x: string, y: string, comment: string, url: string}]{
-        // 何らかの操作でサーバから値を取得
-        return [{id: "Comment1", x: "100", y: "100", comment: "コメント", url: "xxx"}]
+    Load_Comment(current_url: string) :{id: string, x: string, y: string, comment: string, url: string}[]{
+        /*
+        this.xhr.open('GET', this.url);
+        this.xhr.send()
+        console.log(this.xhr.status);
+        if(this.xhr.readyState == 4 && this.xhr.status == 200){
+            console.log(this.xhr.status)
+            JSON.parse(this.xhr.responseText).forEach(e => {
+                this.info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
+            });
+        }*/
+        $.ajax({
+            url: this.url,
+            type: "GET",
+            data: String,
+            async: false,
+            success: function(json:string){
+                console.log(json)
+                JSON.parse(json || "null").forEach(e => {
+                    this.info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
+                });
+            }
+        })
+        return this.info
     }
 
     /**

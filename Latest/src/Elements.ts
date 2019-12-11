@@ -339,6 +339,7 @@ class CommentManager{
     
     private db: DB
     private manageid: ManageID
+    private current_url: string
     
     /**
      * db関係の変数を渡す。
@@ -346,6 +347,7 @@ class CommentManager{
     constructor(){
         this.db = new DB()
         this.manageid = new ManageID()
+        this.current_url = location.origin
     }
 
     /**
@@ -374,9 +376,12 @@ class CommentManager{
     読み込んだ内容を１つずつ取り出してCreate_PIN()にいれる。
     */
    loadComment(){
-        let load_comments = this.db.Load_Comment()
+        let load_comments = this.db.Load_Comment(this.current_url)
+        console.log("start_load");
         load_comments.forEach(e => {
-        this.createComments(e.id, e.x, e.y, "1000", e.comment, e.url)
-    });
-   }
+            console.log(e);
+            this.createComments(e.id, e.x, e.y, "1000", e.comment, e.url)
+        });
+        console.log("end_load");
+    }
 }
