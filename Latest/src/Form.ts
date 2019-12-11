@@ -1,17 +1,20 @@
 class Form{
+
+    form_div: string;
+
+    constructor() {
+        this.form_div = "latest_div"
+    }
+
     /**
      * formを作る関数
      * @param comment_manager mainにあるcomment_manager(コメントを新しく作るため)
      * @param e クリックした場所の座標をjqueryより取得
      */
     make_form(comment_manager: CommentManager, e: JQuery.ClickEvent){
-        // 書き込みモードを解除
-        mode.Change_mode("read")
-        //ノードの初期化
-        if(<HTMLDivElement>document.getElementById("latest_div") != null){
-            $("#latest_div").remove();
-        }
-​
+        // 書き込みモードを解除        
+        this.init_form();
+
         //ポップアップとして表示するもの全体のdivを用意
         let latest_div = document.createElement("div");
         latest_div.id = "latest_div";
@@ -28,37 +31,7 @@ class Form{
         latest_tbody.id = "latest_tbody";
         latest_table.appendChild(latest_tbody);
 
-        //table 1行目作成
-        let latest_tr0 = latest_tbody.insertRow(-1);
-        latest_tr0.id = "latest_tr0";
-        //tabel 1行目のheader作成。
-        let latest_th0= document.createElement("th");
-        latest_th0.id = "latest_th0";
-        latest_th0.textContent = "ユーザーネーム";
-        latest_tr0.appendChild(latest_th0);
-        //tabel 1行目の値を作成。
-        let latest_td0 = document.createElement("td");
-        latest_td0.id = "latest_td0";
-        let latest_input0: HTMLInputElement = <HTMLInputElement>document.createElement("input");
-        latest_input0.id = "input0";
-        latest_td0 = <HTMLTableDataCellElement><unknown>latest_input0;
-        latest_tr0.appendChild(latest_td0);
-
-        //table 2行目作成
-        let latest_tr1 = latest_tbody.insertRow(-1);
-        latest_tr1.id = "latest_tr1";
-        //table 2行目のheader作成。
-        let latest_th1 = document.createElement("th");
-        latest_th1.id = "latest_th1";
-        latest_th1.textContent = "コメント";
-        latest_tr1.appendChild(latest_th1);
-        //table 2行目の値を作成。
-        let latest_td1 = document.createElement("td");
-        latest_td1.id = "latest_td1";
-        let latest_input1: HTMLTextAreaElement = <HTMLTextAreaElement>document.createElement("textarea");
-        latest_input1.id = "textarea";
-        latest_td1 = <HTMLTableDataCellElement><unknown>latest_input1;
-        latest_tr1.appendChild(latest_td1);
+        let inputs = this.make_table(["ユーザーネーム", "コメント"], latest_tbody);
 
         //ポップアップの呼び出し。
         $('#'+latest_div.id).dialog({
@@ -72,8 +45,8 @@ class Form{
                 "登録": function(){
                 let tmp_user: string = "";
                 let tmp_comment: string = "";
-                tmp_user = latest_input0.value;
-                tmp_comment = latest_input1.value;
+                tmp_user = inputs[0].value;
+                tmp_comment = inputs[1].value;
                 console.log("ユーザーネーム: "+tmp_user+"   コメント: "+tmp_comment);
                 // コメントを作成
                 comment_manager.creteNewComments(String(e.pageX), String(e.pageY), "1000", tmp_comment)
@@ -84,5 +57,40 @@ class Form{
                 }
             }
         });  
+    }
+
+    private init_form(){
+        //ノードの初期化
+        if(<HTMLDivElement>document.getElementById(this.form_div) != null){
+            $("#"+this.form_div).remove();
+        }
+    }
+
+    private make_table(line_name: string[], tbody: HTMLTableSectionElement): HTMLInputElement[]{
+        var ret: HTMLInputElement[] = [];
+        line_name.forEach(function(name: string){
+            ret.push(this.make_table_n(name, tbody, ret.length));
+        }.bind(this));
+        return ret;
+    }
+
+    private make_table_n(line_name: string, tbody: HTMLTableSectionElement, line_n: number): HTMLInputElement{
+        //table n行目作成
+        let tr = tbody.insertRow(-1);
+        tr.id = "latest_tr" + line_n;
+        //tabel n行目のheader作成。
+        let th= document.createElement("th");
+        th.id = "latest_th" + line_n;
+        th.textContent = line_name;
+        tr.appendChild(th);
+        //tabel n行目の値を作成。
+        let td = document.createElement("td");
+        td.id = "latest_td" + line_n;
+        let input: HTMLInputElement = <HTMLInputElement>document.createElement("input");
+        input.id = "input" + line_n;
+        td = <HTMLTableDataCellElement><unknown>input;
+        tr.appendChild(td);
+
+        return input;
     }
 }
