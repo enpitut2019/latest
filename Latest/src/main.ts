@@ -4,6 +4,7 @@
 /// <reference path = "Mode.ts" />
 /// <reference path = "ManageID.ts" />
 /// <reference path = "Form.ts" />
+/// <reference path = "URL.ts" />
 /// <reference path = "Debug.ts" />
 
 // 変数を宣言

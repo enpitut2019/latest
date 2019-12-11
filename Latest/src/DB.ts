@@ -14,15 +14,13 @@ class DB{
     */
     Load_Comment() :Promise<Array<{}>>{
         let server_url = this.urlmanage.get_url_get_from_url();
-        let current_url = this.urlmanage.current_url
         var info = [{}]
+        var parameter = {url: this.urlmanage.current_url, sharenum: this.urlmanage.getParam("ShareNum")}
         return new Promise(function (resolve) {
             $.ajax({
                 type: 'GET',
                 url: server_url,
-                data: {
-                    url: current_url
-                },
+                data: parameter,
                 dataType: 'text'
             }).done(function (data: string){
                 console.log(data);

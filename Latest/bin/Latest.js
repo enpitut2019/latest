@@ -305,7 +305,7 @@ class CommentManager {
         node.createComments();
         node.appendComments();
         node.set_CurrentURL();
-        this.db.Save_PIN(id, x, y, comment, node.url);
+        this.db.Save_PIN(id, x, y, comment);
     }
     /*
     サーバーから情報を読み込む
@@ -313,7 +313,7 @@ class CommentManager {
     */
     loadComment() {
         let createComments = this.createComments;
-        this.db.Load_Comment(this.current_url)
+        this.db.Load_Comment()
             .then(function (e) {
             e.forEach(e => {
                 createComments(e.id, e.x, e.y, "1000", e.comment, e.url);
@@ -326,26 +326,24 @@ class DB {
      * 何かしらdbに接続するためのステータスをセットする
      */
     constructor() {
-        this.url = "https://stark-coast-28712.herokuapp.com/comments";
-        this.info = [];
+        this.urlmanage = new URLManage();
     }
     /**
      * サーバーから情報を読み込む
     */
-    Load_Comment(current_url) {
-        let server_url = this.url + "/get_from_url";
+    Load_Comment() {
+        let server_url = this.urlmanage.get_url_get_from_url();
         var info = [{}];
+        var parameter = { url: this.urlmanage.current_url, sharenum: this.urlmanage.getParam("ShareNum") };
         return new Promise(function (resolve) {
             $.ajax({
                 type: 'GET',
                 url: server_url,
-                data: {
-                    url: current_url
-                },
+                data: parameter,
                 dataType: 'text'
             }).done(function (data) {
                 console.log(data);
-                JSON.parse(data).forEach(e => {
+                JSON.parse(data).forEach((e) => {
                     info.push({ id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url });
                 });
                 resolve(info);
@@ -359,18 +357,18 @@ class DB {
      * @param y PINのy座標
      * @param comment コメントの内容
      */
-    Save_PIN(id, x, y, comment, url) {
+    Save_PIN(id, x, y, comment) {
         // サーバに形式を整えて送信 
         $.ajax({
             type: 'POST',
-            url: this.url,
+            url: this.urlmanage.current_url,
             data: {
                 comment: {
                     node_id: id,
                     x: x,
                     y: y,
                     comment: comment,
-                    url: url
+                    url: this.urlmanage.current_url
                 }
             }
         })
@@ -516,6 +514,34 @@ class Form {
         });
     }
 }
+class URLManage {
+    constructor() {
+        this.current_url = location.origin;
+        this.server_url = "https://stark-coast-28712.herokuapp.com/comments";
+        console.log(this.current_url);
+    }
+    get_url_get_from_url() {
+        let get_url = "/get_from_url";
+        return this.server_url + get_url;
+    }
+    /**
+     * Get the URL parameter value(from https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript)
+     *
+     * @param  name {string} パラメータのキー文字列
+     * @return url {url} 対象のURL文字列（任意）
+     */
+    getParam(name, url = "") {
+        if (url == "")
+            url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"), results = regex.exec(url);
+        if (!results)
+            return null;
+        if (!results[2])
+            return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+}
 class Debug {
     constructor() {
     }
@@ -537,6 +563,7 @@ class Debug {
 /// <reference path = "Mode.ts" />
 /// <reference path = "ManageID.ts" />
 /// <reference path = "Form.ts" />
+/// <reference path = "URL.ts" />
 /// <reference path = "Debug.ts" />
 // 変数を宣言
 let mode = new Mode();
@@ -547,7 +574,6 @@ let form = new Form();
     サイトを読み込んだときに実行
 */
 window.onload = function () {
-    console.log(location.href);
     comment_manager.loadComment();
 };
 //background.jsから送られたメッセージで機能を変更する

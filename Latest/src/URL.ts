@@ -4,8 +4,9 @@ class URLManage {
     server_url: string
 
     constructor() {
-        this.current_url = location.href;
+        this.current_url = location.origin;
         this.server_url = "https://stark-coast-28712.herokuapp.com/comments";
+        console.log(this.current_url)
     }
 
     get_url_get_from_url() :string{
@@ -20,7 +21,7 @@ class URLManage {
      * @return url {url} 対象のURL文字列（任意）
      */
     getParam(name :string, url = ""){
-    if (url == "") url = window.location.href;
+        if (url == "") url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
         var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
             results = regex.exec(url);
