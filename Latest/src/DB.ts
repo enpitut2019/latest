@@ -23,7 +23,7 @@ class DB{
                 data: parameter,
                 dataType: 'text'
             }).done(function (data: string){
-                console.log(data);
+                console.log("DEBUG: LoadData = " + data);
                 JSON.parse(data).forEach((e: { node_id: string; x: string; y: string; comment: string; url: string; }) => {
                     info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
                 });
@@ -54,7 +54,7 @@ class DB{
                 }
             }
         }).done(function(data){
-            console.log(data)
+            console.log("DEBUG: SaveData = {id: " + data.comment.node_id + ", x: " + data.comment.x + ", y: " + data.comment.y + ", comment: " + data.comment.comment + ", url: " + data.comment.url + "}");
         });
     }
 }

@@ -43,18 +43,19 @@ class Form{
             modal: true,
             buttons: {
                 "登録": function(){
-                let tmp_user: string = "";
-                let tmp_comment: string = "";
-                tmp_user = inputs[0].value;
-                tmp_comment = inputs[1].value;
-                console.log("ユーザーネーム: "+tmp_user+"   コメント: "+tmp_comment);
-                // コメントを作成
-                comment_manager.creteNewComments(String(e.pageX), String(e.pageY), "1000", tmp_comment)
-                $(this).dialog('close');
-                $("#latest_div").remove();
-                // 書き込みモードを再開
-                mode.Change_mode("write")
+                    let tmp_user: string = "";
+                    let tmp_comment: string = "";
+                    tmp_user = inputs[0].value;
+                    tmp_comment = inputs[1].value;
+                    console.log("ユーザーネーム: "+tmp_user+"   コメント: "+tmp_comment);
+                    // コメントを作成
+                    comment_manager.creteNewComments(String(e.pageX), String(e.pageY), "1000", tmp_comment)
+                    $(this).dialog('close');
+                    $("#latest_div").remove();
                 }
+            },
+            close: function(){
+                mode.Change_mode("write");
             }
         });  
     }

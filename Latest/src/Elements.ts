@@ -356,7 +356,7 @@ class CommentManager{
     createComments(id: string, x: string, y: string, z: string = "1000", comment: string, url: string){
         if (id == undefined) return;
         let node = new Comments(id, x, y, z, comment, url)
-        console.log("id = " + id + ",x = " + x + ",y = " + y + ",z = " + z + ",comment = " + comment + ",url = " + url);
+        console.log("DEBUG: CreateComment = {id = " + id + ",x = " + x + ",y = " + y + ",z = " + z + ",comment = " + comment + ",url = " + url + "}");
         node.createComments()
         node.appendComments()
     }

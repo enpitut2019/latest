@@ -292,7 +292,7 @@ class CommentManager {
         if (id == undefined)
             return;
         let node = new Comments(id, x, y, z, comment, url);
-        console.log("id = " + id + ",x = " + x + ",y = " + y + ",z = " + z + ",comment = " + comment + ",url = " + url);
+        console.log("DEBUG: CreateComment = {id = " + id + ",x = " + x + ",y = " + y + ",z = " + z + ",comment = " + comment + ",url = " + url + "}");
         node.createComments();
         node.appendComments();
     }
@@ -342,7 +342,7 @@ class DB {
                 data: parameter,
                 dataType: 'text'
             }).done(function (data) {
-                console.log(data);
+                console.log("DEBUG: LoadData = " + data);
                 JSON.parse(data).forEach((e) => {
                     info.push({ id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url });
                 });
@@ -372,7 +372,7 @@ class DB {
                 }
             }
         }).done(function (data) {
-            console.log(data);
+            console.log("DEBUG: SaveData = " + data);
         });
     }
 }
@@ -441,8 +441,7 @@ class Form {
      * @param e クリックした場所の座標をjqueryより取得
      */
     make_form(comment_manager, e) {
-        // 書き込みモードを解除
-        mode.Change_mode("read");
+        // 書き込みモードを解除        
         this.init_form();
         //ポップアップとして表示するもの全体のdivを用意
         let latest_div = document.createElement("div");
@@ -477,9 +476,10 @@ class Form {
                     comment_manager.creteNewComments(String(e.pageX), String(e.pageY), "1000", tmp_comment);
                     $(this).dialog('close');
                     $("#latest_div").remove();
-                    // 書き込みモードを再開
-                    mode.Change_mode("write");
                 }
+            },
+            close: function () {
+                mode.Change_mode("write");
             }
         });
     }
@@ -571,20 +571,27 @@ let mode = new Mode();
 let comment_manager = new CommentManager();
 let debug = new Debug();
 let form = new Form();
-/*
-    サイトを読み込んだときに実行
-*/
+// サイトを読み込んだときに実行
 window.onload = function () {
+    // コメントの読み込み
     comment_manager.loadComment();
 };
 //background.jsから送られたメッセージで機能を変更する
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    /*
+        コマンドをmodeに書き込み
+        コマンド=>"read", "write"
+    */
     mode.Change_mode(request.command);
 });
 $("body").on("click", function (e) {
+    console.log("DEBUG: mode = " + mode.flag);
     // 書き込みモードならPIN・コメントを作成
     if (mode.Judge_mode("write")) {
+        // フォームを閉じる際にもう一度開かないようにするための対策
         if (mode.form_unmake) {
+            // 書き込み中にフォームを再度作らないように制御
+            mode.Change_mode("read");
             form.make_form(comment_manager, e);
         }
         mode.Change_unmake();

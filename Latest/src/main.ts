@@ -29,6 +29,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 });
 
 $("body").on("click", function(e){
+    console.log("DEBUG: mode = " + mode.flag)
     // 書き込みモードならPIN・コメントを作成
     if(mode.Judge_mode("write")){
         // フォームを閉じる際にもう一度開かないようにするための対策
