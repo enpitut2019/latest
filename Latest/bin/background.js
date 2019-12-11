@@ -24,3 +24,14 @@ chrome.browserAction.onClicked.addListener(function (tab) {
         chrome.tabs.sendMessage(tab.id, { command: "write" });
     }
 });
+chrome.contextMenus.create({
+    title: "コンテクストメニューを追加",
+    id: "right",
+    contexts: ["all"],
+    type: "normal"
+});
+chrome.contextMenus.onClicked.addListener(function (info, tab) {
+    if (info.menuItemId == "right") {
+        window.alert("右クリック押したよ");
+    }
+});

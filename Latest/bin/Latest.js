@@ -58,6 +58,24 @@ var HTML_Element = /** @class */ (function () {
         this.node.style.backgroundColor = "#ffff99";
     };
     /**
+     * ボタン用のスタイル
+     */
+    HTML_Element.prototype.set_buttonstyle = function () {
+        this.node.style.display = "inline-block";
+        this.node.style.textDecoration = "none";
+        this.node.style.background = "#ff8181";
+        this.node.style.color = "#FFF";
+        this.node.style.width = "20px";
+        this.node.style.height = "20px";
+        this.node.style.lineHeight = "20px";
+        this.node.style.borderRadius = "50%";
+        this.node.style.textAlign = "center";
+        this.node.style.fontWeight = "bold";
+        this.node.style.overflow = "hidden";
+        this.node.style.boxShadow = "0px 1px 1px rgba(0,0,0,0.29)";
+        this.node.style.borderBottom = "solid 1px #bd6565";
+    };
+    /**
      * カーソルの表示方法を設定
      * @param type ノード上のカーソルの表示方法を指定
      */
@@ -128,7 +146,7 @@ var PIN_Node = /** @class */ (function (_super) {
         // 表示する言葉(将来的には画像)
         _super.prototype.set_Image.call(this);
         // 見た目の設定
-        _super.prototype.set_style.call(this);
+        _super.prototype.set_buttonstyle.call(this);
         _super.prototype.set_cursor.call(this, "pointer");
         // クリックしたときのアクションをセット
         _super.prototype.set_Function.call(this, this.set_function);
