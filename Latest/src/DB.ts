@@ -7,7 +7,7 @@ class DB{
      * 何かしらdbに接続するためのステータスをセットする
      */
     constructor(){
-        this.url = "http://localhost:3000/comments"
+        this.url = "https://stark-coast-28712.herokuapp.com/comments"
         this.info = []
     }
 
