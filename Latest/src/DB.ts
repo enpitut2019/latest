@@ -43,7 +43,7 @@ class DB{
         // サーバに形式を整えて送信 
         $.ajax({
             type: 'POST',
-            url: this.urlmanage.current_url,
+            url: this.urlmanage.server_url,
             data: {
                 comment: {
                     node_id: id,
@@ -53,9 +53,8 @@ class DB{
                     url: this.urlmanage.current_url
                 }
             }
-        })
-        .done(function(data: {}){
-            console.log(data);
-        })
+        }).done(function(data){
+            console.log(data)
+        });
     }
 }
