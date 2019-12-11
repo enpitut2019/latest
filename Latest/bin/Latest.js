@@ -1,20 +1,7 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 /**
  * element作成の親クラス
  */
-var HTML_Element = /** @class */ (function () {
+class HTML_Element {
     /**
      * elementを作成する。(idとzは必ず指定する)
      * @param id elementがもつid属性
@@ -24,10 +11,7 @@ var HTML_Element = /** @class */ (function () {
      * @param element_type elementの属性(基本的に"div")
      * @param click_function クリックしたときに発動する関数(指定しなくても良い)
      */
-    function HTML_Element(id, z, url, type, element_type) {
-        if (url === void 0) { url = ""; }
-        if (type === void 0) { type = ""; }
-        if (element_type === void 0) { element_type = "div"; }
+    constructor(id, z, url = "", type = "", element_type = "div") {
         // elementの作成
         this.node = document.createElement(element_type);
         this.uniid = id;
@@ -37,82 +21,79 @@ var HTML_Element = /** @class */ (function () {
         this.element_type = type;
         this.url = url;
     }
-    HTML_Element.prototype.set_Value = function () {
+    set_Value() {
         // idの付与
         this.node.id = this.id;
         // z位置(重なり順を決定)
         this.node.style.zIndex = this.z;
-    };
+    }
     /**
      * 指定した値分zIndex(重なり順)を追加
      * @param add_num 加えるz値
      */
-    HTML_Element.prototype.add_zIndex = function (add_num) {
-        var current_zIndex = this.node.style.zIndex;
+    add_zIndex(add_num) {
+        let current_zIndex = this.node.style.zIndex;
         this.node.style.zIndex = String(Number(current_zIndex) + add_num);
-    };
+    }
     /**
      * ノードにidをセットする。
      */
-    HTML_Element.prototype.set_style = function () {
+    set_style() {
         this.node.style.padding = "10px";
         this.node.style.marginBottom = "10px";
         this.node.style.border = "1px solid #333333";
         this.node.style.backgroundColor = "#ffff99";
-    };
+    }
     /**
      * カーソルの表示方法を設定
      * @param type ノード上のカーソルの表示方法を指定
      */
-    HTML_Element.prototype.set_cursor = function (type) {
+    set_cursor(type) {
         this.node.style.cursor = type;
-    };
+    }
     /**
      * show()関数でコメントが表示できるようにdisplay属性を付与(defaultはnone)
      * @param type ノードの表示状態を指定する
      */
-    HTML_Element.prototype.set_display = function (type) {
+    set_display(type) {
         this.node.style.display = type;
-    };
+    }
     /**
      * 指定した関数をクリックしたときに発火する関数をセットする関数
      * @param click_function クリックしたときに発火する関数
      */
-    HTML_Element.prototype.set_Function = function (click_function) {
+    set_Function(click_function) {
         // elementをクリックしたときの関数を追加
         this.node.onclick = function () {
             click_function();
         };
-    };
+    }
     /**
      * 指定したURLから画像をセットする関数
      * @param image セットするイメージの画像を指定する(本来は画像のURLを指定)
      */
-    HTML_Element.prototype.set_Image = function (image) {
-        if (image === void 0) { image = ""; }
+    set_Image(image = "") {
         this.node.innerHTML = image;
-    };
-    HTML_Element.prototype.set_CurrentURL = function () {
+    }
+    set_CurrentURL() {
         this.url = location.origin;
-    };
+    }
     /**
     * 指定したidのclose-idやPIN-idを返す
     * @param id コメントのid
     * @param add_id 追加したいid("close"or"PIN")
     */
-    HTML_Element.prototype.make_id = function (id, add_id) {
+    make_id(id, add_id) {
         if (add_id == "") {
             return id;
         }
         return id + "_" + add_id;
-    };
-    return HTML_Element;
-}());
+    }
+}
 /**
  * PINを作成するためのclass
  */
-var PIN_Node = /** @class */ (function (_super) {
-    __extends(PIN_Node, _super);
+class PIN_Node extends HTML_Element {
     /**
      * PINを作成する
      * @param id PINのid属性
@@ -120,90 +101,79 @@ var PIN_Node = /** @class */ (function (_super) {
      * @param y pin-nodeのy座標
      * @param z pin-nodeのz座標
      */
-    function PIN_Node(id, x, y, z, set_function, url) {
-        if (url === void 0) { url = ""; }
-        var _this = _super.call(this, id, z, url, "PIN", "div") || this;
-        _this.x = x;
-        _this.y = y;
-        _this.set_function = set_function;
-        return _this;
+    constructor(id, x, y, z, set_function, url = "") {
+        super(id, z, url, "PIN", "div");
+        this.x = x;
+        this.y = y;
+        this.set_function = set_function;
     }
-    PIN_Node.prototype.set_Value = function () {
-        _super.prototype.set_Value.call(this);
+    set_Value() {
+        super.set_Value();
         // 位置を付与(absolute)
         this.Set_Position_absolute(this.x, this.y);
         // 表示する言葉(将来的には画像)
-        _super.prototype.set_Image.call(this);
+        super.set_Image();
         // 見た目の設定
-        _super.prototype.set_style.call(this);
-        _super.prototype.set_cursor.call(this, "pointer");
+        super.set_style();
+        super.set_cursor("pointer");
         // クリックしたときのアクションをセット
-        _super.prototype.set_Function.call(this, this.set_function);
-    };
+        super.set_Function(this.set_function);
+    }
     /**
      * pin-nodeの座標を指定する。
      * @param x pin-nodeのx座標
      * @param y pin-nodeのy座標
      */
-    PIN_Node.prototype.Set_Position_absolute = function (x, y) {
+    Set_Position_absolute(x, y) {
         this.node.style.position = "absolute";
         this.node.style.left = x + "px";
         this.node.style.top = y + "px";
-    };
-    return PIN_Node;
-}(HTML_Element));
+    }
+}
 /**
  * コメントのノードを作成
  */
-var Comment_Node = /** @class */ (function (_super) {
-    __extends(Comment_Node, _super);
-    function Comment_Node(id, z, comment, url) {
-        if (url === void 0) { url = ""; }
-        var _this = _super.call(this, id, z) || this;
-        _this.comment = comment;
-        _this.add_zindex = 1;
-        return _this;
+class Comment_Node extends HTML_Element {
+    constructor(id, z, comment, url = "") {
+        super(id, z);
+        this.comment = comment;
+        this.add_zindex = 1;
     }
-    Comment_Node.prototype.set_Value = function () {
-        _super.prototype.set_Value.call(this);
+    set_Value() {
+        super.set_Value();
         // コメントのスタイルを追加。(display="none"も追加)
-        _super.prototype.set_style.call(this);
-        _super.prototype.set_display.call(this, "none");
+        super.set_style();
+        super.set_display("none");
         // コメントの内容を付与
         this.node.innerHTML = this.comment;
         // zIndexを追加
-        _super.prototype.add_zIndex.call(this, this.add_zindex);
-    };
-    return Comment_Node;
-}(HTML_Element));
+        super.add_zIndex(this.add_zindex);
+    }
+}
 /**
  * コメントをクローズするためのノードを作成
  */
-var Close_Node = /** @class */ (function (_super) {
-    __extends(Close_Node, _super);
-    function Close_Node(id, z, set_function, url) {
-        if (url === void 0) { url = ""; }
-        var _this = _super.call(this, id, z, "close", "div") || this;
-        _this.add_zindex = 2;
-        _this.set_function = set_function;
-        return _this;
+class Close_Node extends HTML_Element {
+    constructor(id, z, set_function, url = "") {
+        super(id, z, "close", "div");
+        this.add_zindex = 2;
+        this.set_function = set_function;
     }
-    Close_Node.prototype.set_Value = function () {
-        _super.prototype.set_Value.call(this);
+    set_Value() {
+        super.set_Value();
         // コメントのスタイルを追加。(display="none"も追加)
         //super.set_style()
-        _super.prototype.set_cursor.call(this, "pointer");
-        _super.prototype.set_display.call(this, "none");
+        super.set_cursor("pointer");
+        super.set_display("none");
         // 表示する言葉(将来的には画像)
-        _super.prototype.set_Image.call(this, "x");
+        super.set_Image("x");
         // zIndexを追加
-        _super.prototype.add_zIndex.call(this, this.add_zindex);
+        super.add_zIndex(this.add_zindex);
         // このノードをクリックしたときに発火する関数を指定
-        _super.prototype.set_Function.call(this, this.set_function);
-    };
-    return Close_Node;
-}(HTML_Element));
-var Comments = /** @class */ (function () {
+        super.set_Function(this.set_function);
+    }
+}
+class Comments {
     /**
      * pin,comment,closeノードを作成するのに必要な値をセットする。
      * @param id ノードのid
@@ -212,9 +182,7 @@ var Comments = /** @class */ (function () {
      * @param z pinノードのz座標(重なり順)
      * @param comment commentノードに表示するコメント内容
      */
-    function Comments(id, x, y, z, comment, url) {
-        if (z === void 0) { z = "1000"; }
-        if (url === void 0) { url = ""; }
+    constructor(id, x, y, z = "1000", comment, url = "") {
         this.comment_node = new Comment_Node(id, z, comment, url);
         this.cls_node = new Close_Node(id, z, this.close_comment.bind(this), url);
         this.pin_node = new PIN_Node(id, x, y, z, this.Display_Comment.bind(this), url);
@@ -228,92 +196,91 @@ var Comments = /** @class */ (function () {
     /**
      * 各ノードを作成する。
      */
-    Comments.prototype.createComments = function () {
+    createComments() {
         this.comment_node.set_Value();
         this.cls_node.set_Value();
         this.pin_node.set_Value();
-    };
+    }
     /**
      * 作成したノードをサイトに追加する
      */
-    Comments.prototype.appendComments = function () {
+    appendComments() {
         document.body.appendChild(this.comment_node.node);
         document.body.appendChild(this.cls_node.node);
         document.body.appendChild(this.pin_node.node);
-    };
+    }
     /**
      * コメントを新規作成時に実行。各ノードに現在のURLを格納
      */
-    Comments.prototype.set_CurrentURL = function () {
+    set_CurrentURL() {
         this.comment_node.set_CurrentURL();
         this.cls_node.set_CurrentURL();
         this.pin_node.set_CurrentURL();
         this.url = location.origin;
-    };
+    }
     /**
     * コメントを表示させる関数
     */
-    Comments.prototype.Display_Comment = function () {
-        var comment_id = this.comment_node.id;
+    Display_Comment() {
+        let comment_id = this.comment_node.id;
         $("#" + this.pin_node.id).on("click", function (e) {
             if ($("#" + comment_id).is(":hidden")) {
                 this.Move_Comment(e.pageX, e.pageY, this.id);
             }
         }.bind(this));
-    };
+    }
     /**
     * コメントとバツマークを指定した位置に表示させる。
     * @param x 指定したx座標
     * @param y 指定したy座標
     * @param id クリックしたPINに対応したコメントのid属性
     */
-    Comments.prototype.Move_Comment = function (x, y, id) {
+    Move_Comment(x, y, id) {
         // 対象のidのコメントとそのコメントのバツマークを表示状態に変更
         $("#" + this.comment_node.id).show();
         $("#" + this.cls_node.id).show();
         // 指定の位置にコメントを移動
         this.Set_Position_jQuery(x, y, this.comment_node.id);
         // バツマークの移動座標を計算
-        var cls_btn_x = x;
+        let cls_btn_x = x;
         // コメントの幅を取得
-        var target_width = $("#" + this.comment_node.id).outerWidth(true);
+        let target_width = $("#" + this.comment_node.id).outerWidth(true);
         // コメントの幅が取得できればその分右にずらす
         if (target_width != undefined) {
             cls_btn_x += target_width - 5;
         }
-        var cls_btn_y = y - 5;
+        let cls_btn_y = y - 5;
         // 指定の位置の右上にバツマークを移動
         this.Set_Position_jQuery(cls_btn_x, cls_btn_y, this.cls_node.id);
-    };
+    }
     /**
      * コメントをクローズするための関数
      */
-    Comments.prototype.close_comment = function () {
+    close_comment() {
         if ($("#" + this.cls_node.id).is(":visible")) {
             $("#" + this.cls_node.id).hide();
             $("#" + this.comment_node.id).hide();
         }
-    };
+    }
     /**
      * 対象となるノードの座標を変更する。
      * @param x 対象のx座標
      * @param y 対象のy座標
      * @param id 対象のid属性
      */
-    Comments.prototype.Set_Position_jQuery = function (x, y, id) {
+    Set_Position_jQuery(x, y, id) {
         $("#" + id).css({
             "position": "absolute",
             "left": x,
             "top": y
         });
-    };
-    return Comments;
-}());
-var CommentManager = /** @class */ (function () {
+    }
+}
+class CommentManager {
     /**
      * db関係の変数を渡す。
      */
-    function CommentManager() {
+    constructor() {
         this.db = new DB();
         this.manageid = new ManageID();
         this.current_url = location.origin;
@@ -321,52 +288,69 @@ var CommentManager = /** @class */ (function () {
     /**
      * 各ノードを作成する。
      */
-    CommentManager.prototype.createComments = function (id, x, y, z, comment, url) {
-        if (z === void 0) { z = "1000"; }
-        var node = new Comments(id, x, y, z, comment, url);
+    createComments(id, x, y, z = "1000", comment, url) {
+        if (id == undefined)
+            return;
+        let node = new Comments(id, x, y, z, comment, url);
+        console.log("id = " + id + ",x = " + x + ",y = " + y + ",z = " + z + ",comment = " + comment + ",url = " + url);
         node.createComments();
         node.appendComments();
-    };
+    }
     /**
      * 新しいノードをサイトに追加した後、データベースに追加する
      */
-    CommentManager.prototype.creteNewComments = function (x, y, z, comment) {
-        if (z === void 0) { z = "1000"; }
-        var id = this.manageid.get_Random_id();
-        var node = new Comments(id, x, y, z, comment);
+    creteNewComments(x, y, z = "1000", comment) {
+        let id = this.manageid.get_Random_id();
+        let node = new Comments(id, x, y, z, comment);
         node.createComments();
         node.appendComments();
         node.set_CurrentURL();
         this.db.Save_PIN(id, x, y, comment, node.url);
-    };
+    }
     /*
     サーバーから情報を読み込む
     読み込んだ内容を１つずつ取り出してCreate_PIN()にいれる。
     */
-    CommentManager.prototype.loadComment = function () {
-        var _this = this;
-        var load_comments = this.db.Load_Comment(this.current_url);
+    loadComment() {
+        let createComments = this.createComments;
         console.log("start_load");
-        load_comments.forEach(function (e) {
-            console.log(e);
-            _this.createComments(e.id, e.x, e.y, "1000", e.comment, e.url);
+        this.db.Load_Comment(this.current_url)
+            .then(function (e) {
+            e.forEach(e => {
+                createComments(e.id, e.x, e.y, "1000", e.comment, e.url);
+            });
         });
         console.log("end_load");
-    };
-    return CommentManager;
-}());
-var DB = /** @class */ (function () {
+    }
+}
+class DB {
     /**
      * 何かしらdbに接続するためのステータスをセットする
      */
-    function DB() {
+    constructor() {
         this.url = "http://localhost:3000/comments";
         this.info = [];
     }
     /**
      * サーバーから情報を読み込む
     */
-    DB.prototype.Load_Comment = function (current_url) {
+    Load_Comment(current_url) {
+        let server_url = this.url;
+        var info = [{}];
+        return new Promise(function (resolve) {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', server_url);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log(xhr.responseText);
+                    JSON.parse(xhr.responseText || "null").forEach(e => {
+                        info.push({ id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url });
+                    });
+                    resolve(info);
+                }
+            };
+        });
         /*
         this.xhr.open('GET', this.url);
         this.xhr.send()
@@ -376,22 +360,22 @@ var DB = /** @class */ (function () {
             JSON.parse(this.xhr.responseText).forEach(e => {
                 this.info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
             });
-        }*/
+        }
         $.ajax({
             url: this.url,
             type: "GET",
             data: String,
             async: false,
-            success: function (json) {
-                var _this = this;
-                console.log(json);
-                JSON.parse(json || "null").forEach(function (e) {
-                    _this.info.push({ id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url });
+            success: function(json:string){
+                console.log(json)
+                JSON.parse(json || "null").forEach(e => {
+                    this.info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
                 });
             }
-        });
-        return this.info;
-    };
+        })
+        return this.info
+        */
+    }
     /**
      * 作成したPIN及びコメントをサーバに形式を整えて送信し、保存
      * @param id コメントのid属性
@@ -399,13 +383,16 @@ var DB = /** @class */ (function () {
      * @param y PINのy座標
      * @param comment コメントの内容
      */
-    DB.prototype.Save_PIN = function (id, x, y, comment, url) {
+    Save_PIN(id, x, y, comment, url) {
         // サーバに形式を整えて送信 
-    };
-    return DB;
-}());
-var Mode = /** @class */ (function () {
-    function Mode() {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', this.url);
+        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+        xhr.send('comment[node_id]=' + id + '&comment[x]=' + x + '&comment[y]=' + y + '&comment[comment]=' + comment + '&comment[url]=' + url);
+    }
+}
+class Mode {
+    constructor() {
         this.flag = "read";
         this.form_unmake = true;
     }
@@ -413,63 +400,59 @@ var Mode = /** @class */ (function () {
      * 状態を変更するための関数
      * @param command セットした状態
      */
-    Mode.prototype.Change_mode = function (command) {
+    Change_mode(command) {
         if (command != "wirte" && command != "read") {
             this.flag = "read";
         }
         this.flag = command;
-    };
+    }
     /**
      * 指定したモードになっているかどうかを返す
      * @param mode 確かめるモード
      */
-    Mode.prototype.Judge_mode = function (mode) {
+    Judge_mode(mode) {
         if (this.flag == mode) {
             return true;
         }
         else {
             return false;
         }
-    };
-    Mode.prototype.Change_unmake = function () {
+    }
+    Change_unmake() {
         if (this.form_unmake) {
             this.form_unmake = false;
         }
         else {
             this.form_unmake = true;
         }
-    };
-    return Mode;
-}());
-var ManageID = /** @class */ (function () {
-    function ManageID() {
+    }
+}
+class ManageID {
+    constructor() {
         this.maxnum = 100000;
         this.minnum = 1;
     }
-    ManageID.prototype.get_Random_id = function () {
-        var id = this.make_random_id();
+    get_Random_id() {
+        let id = this.make_random_id();
         return id;
-    };
-    ManageID.prototype.getRandomInt = function (min, max) {
+    }
+    getRandomInt(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-    };
-    ManageID.prototype.make_random_id = function () {
-        var id = String(this.getRandomInt(this.minnum, this.maxnum));
-        return "Comment" + id;
-    };
-    return ManageID;
-}());
-var Form = /** @class */ (function () {
-    function Form() {
     }
+    make_random_id() {
+        let id = String(this.getRandomInt(this.minnum, this.maxnum));
+        return "Comment" + id;
+    }
+}
+class Form {
     /**
      * formを作る関数
      * @param comment_manager mainにあるcomment_manager(コメントを新しく作るため)
      * @param e クリックした場所の座標をjqueryより取得
      */
-    Form.prototype.make_form = function (comment_manager, e) {
+    make_form(comment_manager, e) {
         // 書き込みモードを解除
         mode.Change_mode("read");
         //ノードの初期化
@@ -477,45 +460,45 @@ var Form = /** @class */ (function () {
             $("#latest_div").remove();
         }
         //ポップアップとして表示するもの全体のdivを用意
-        var latest_div = document.createElement("div");
+        let latest_div = document.createElement("div");
         latest_div.id = "latest_div";
         latest_div.style.backgroundColor = "#e6e6fa";
         document.body.appendChild(latest_div);
         // table作成
-        var latest_table = document.createElement("table");
+        let latest_table = document.createElement("table");
         latest_table.id = "latest_table";
         latest_div.appendChild(latest_table);
         //tableのbody作成
-        var latest_tbody = document.createElement("tbody");
+        let latest_tbody = document.createElement("tbody");
         latest_tbody.id = "latest_tbody";
         latest_table.appendChild(latest_tbody);
         //table 1行目作成
-        var latest_tr0 = latest_tbody.insertRow(-1);
+        let latest_tr0 = latest_tbody.insertRow(-1);
         latest_tr0.id = "latest_tr0";
         //tabel 1行目のheader作成。
-        var latest_th0 = document.createElement("th");
+        let latest_th0 = document.createElement("th");
         latest_th0.id = "latest_th0";
         latest_th0.textContent = "ユーザーネーム";
         latest_tr0.appendChild(latest_th0);
         //tabel 1行目の値を作成。
-        var latest_td0 = document.createElement("td");
+        let latest_td0 = document.createElement("td");
         latest_td0.id = "latest_td0";
-        var latest_input0 = document.createElement("input");
+        let latest_input0 = document.createElement("input");
         latest_input0.id = "input0";
         latest_td0 = latest_input0;
         latest_tr0.appendChild(latest_td0);
         //table 2行目作成
-        var latest_tr1 = latest_tbody.insertRow(-1);
+        let latest_tr1 = latest_tbody.insertRow(-1);
         latest_tr1.id = "latest_tr1";
         //table 2行目のheader作成。
-        var latest_th1 = document.createElement("th");
+        let latest_th1 = document.createElement("th");
         latest_th1.id = "latest_th1";
         latest_th1.textContent = "コメント";
         latest_tr1.appendChild(latest_th1);
         //table 2行目の値を作成。
-        var latest_td1 = document.createElement("td");
+        let latest_td1 = document.createElement("td");
         latest_td1.id = "latest_td1";
-        var latest_input1 = document.createElement("textarea");
+        let latest_input1 = document.createElement("textarea");
         latest_input1.id = "textarea";
         latest_td1 = latest_input1;
         latest_tr1.appendChild(latest_td1);
@@ -529,8 +512,8 @@ var Form = /** @class */ (function () {
             modal: true,
             buttons: {
                 "登録": function () {
-                    var tmp_user = "";
-                    var tmp_comment = "";
+                    let tmp_user = "";
+                    let tmp_comment = "";
                     tmp_user = latest_input0.value;
                     tmp_comment = latest_input1.value;
                     console.log("ユーザーネーム: " + tmp_user + "   コメント: " + tmp_comment);
@@ -543,25 +526,23 @@ var Form = /** @class */ (function () {
                 }
             }
         });
-    };
-    return Form;
-}());
-var Debug = /** @class */ (function () {
-    function Debug() {
     }
-    Debug.prototype.make_random_comment = function () {
-        var comments = ["ようこそLatestへ!!", "これ、楽しそう!", "これならどうかな?", "こんなのできたんだね!"];
-        var min = Math.ceil(0);
-        var max = Math.floor(comments.length);
-        var num = Math.floor(Math.random() * (max - min)) + min;
+}
+class Debug {
+    constructor() {
+    }
+    make_random_comment() {
+        let comments = ["ようこそLatestへ!!", "これ、楽しそう!", "これならどうかな?", "こんなのできたんだね!"];
+        let min = Math.ceil(0);
+        let max = Math.floor(comments.length);
+        let num = Math.floor(Math.random() * (max - min)) + min;
         return comments[num];
-    };
-    Debug.prototype.get_random_comment = function () {
-        var comment = this.make_random_comment();
+    }
+    get_random_comment() {
+        let comment = this.make_random_comment();
         return comment;
-    };
-    return Debug;
-}());
+    }
+}
 // 新しいファイルを作った時には必ずここに書き込んでください。
 /// <reference path = "Elements.ts" />
 /// <reference path = "DB.ts" />
@@ -570,17 +551,15 @@ var Debug = /** @class */ (function () {
 /// <reference path = "Form.ts" />
 /// <reference path = "Debug.ts" />
 // 変数を宣言
-var mode = new Mode();
-var comment_manager = new CommentManager();
-var debug = new Debug();
-var form = new Form();
+let mode = new Mode();
+let comment_manager = new CommentManager();
+let debug = new Debug();
+let form = new Form();
 /*
     サイトを読み込んだときに実行
 */
 window.onload = function () {
-    console.log("start_function");
     comment_manager.loadComment();
-    console.log("end_function");
 };
 //background.jsから送られたメッセージで機能を変更する
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {

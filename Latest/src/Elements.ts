@@ -354,7 +354,9 @@ class CommentManager{
      * 各ノードを作成する。
      */
     createComments(id: string, x: string, y: string, z: string = "1000", comment: string, url: string){
+        if (id == undefined) return;
         let node = new Comments(id, x, y, z, comment, url)
+        console.log("id = " + id + ",x = " + x + ",y = " + y + ",z = " + z + ",comment = " + comment + ",url = " + url);
         node.createComments()
         node.appendComments()
     }
@@ -375,13 +377,16 @@ class CommentManager{
     サーバーから情報を読み込む
     読み込んだ内容を１つずつ取り出してCreate_PIN()にいれる。
     */
-   loadComment(){
-        let load_comments = this.db.Load_Comment(this.current_url)
+    loadComment(){
+        let createComments = this.createComments
         console.log("start_load");
-        load_comments.forEach(e => {
-            console.log(e);
-            this.createComments(e.id, e.x, e.y, "1000", e.comment, e.url)
+        this.db.Load_Comment(this.current_url)    
+        .then(function(e: Array<any>) {
+            e.forEach(e => {
+                createComments(e.id, e.x, e.y, "1000", e.comment, e.url)
+            });
         });
+        
         console.log("end_load");
     }
 }

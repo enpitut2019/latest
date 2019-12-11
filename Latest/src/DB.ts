@@ -2,7 +2,7 @@ class DB{
 
     url: string;
     info: Array<{id: string, x: string, y: string, comment: string, url: string}>;
-
+    
     /**
      * 何かしらdbに接続するためのステータスをセットする
      */
@@ -14,7 +14,23 @@ class DB{
     /**
      * サーバーから情報を読み込む
     */
-    Load_Comment(current_url: string) :{id: string, x: string, y: string, comment: string, url: string}[]{
+    Load_Comment(current_url: string) :Promise<Array<{}>>{
+        let server_url = this.url;
+        var info = [{}]
+        return new Promise(function (resolve) {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', server_url);
+            xhr.send();
+            xhr.onreadystatechange = function() {
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.responseText)
+                    JSON.parse(xhr.responseText || "null").forEach(e => {
+                        info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
+                    });
+                    resolve(info)
+                }
+            }
+        });
         /*
         this.xhr.open('GET', this.url);
         this.xhr.send()
@@ -24,7 +40,7 @@ class DB{
             JSON.parse(this.xhr.responseText).forEach(e => {
                 this.info.push({id: e.node_id, x: e.x, y: e.y, comment: e.comment, url: e.url})
             });
-        }*/
+        }
         $.ajax({
             url: this.url,
             type: "GET",
@@ -38,6 +54,7 @@ class DB{
             }
         })
         return this.info
+        */
     }
 
     /**
@@ -49,5 +66,9 @@ class DB{
      */
     Save_PIN(id: string, x: string, y: string, comment: string, url: string) {
         // サーバに形式を整えて送信 
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', this.url);
+        xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+        xhr.send( 'comment[node_id]=' + id + '&comment[x]=' + x + '&comment[y]=' + y + '&comment[comment]=' + comment + '&comment[url]=' + url );
     }
 }

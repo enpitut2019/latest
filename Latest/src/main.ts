@@ -16,11 +16,7 @@ let form = new Form()
     サイトを読み込んだときに実行
 */
 window.onload = function(){
-    console.log("start_function");
-    
     comment_manager.loadComment()
-    console.log("end_function");
-    
 }
 
 //background.jsから送られたメッセージで機能を変更する
