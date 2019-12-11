@@ -9,16 +9,18 @@ class HTML_Element {
     z: string;
     type: string;
     element_type: string;
+    url: string;
     
     /**
      * elementを作成する。(idとzは必ず指定する)
      * @param id elementがもつid属性
      * @param z 重なり順
+     * @param url コメントのurl(作成時は""でok)
      * @param type elementのタイプ("PIN"や"close")
      * @param element_type elementの属性(基本的に"div") 
      * @param click_function クリックしたときに発動する関数(指定しなくても良い)
      */
-    constructor(id: string, z: string, type: string = "", element_type:string = "div"){
+    constructor(id: string, z: string, url: string = "", type: string = "", element_type:string = "div"){
         // elementの作成
         this.node = document.createElement(element_type);
         this.uniid = id;
@@ -26,6 +28,7 @@ class HTML_Element {
         this.z = z;
         this.type = type;
         this.element_type = type;
+        this.url = url;
     }
 
     set_Value(){
@@ -89,6 +92,10 @@ class HTML_Element {
         this.node.innerHTML = image
     }
 
+    set_CurrentURL(){
+        this.url = location.origin
+    }
+
     /**
     * 指定したidのclose-idやPIN-idを返す
     * @param id コメントのid
@@ -118,11 +125,11 @@ class PIN_Node extends HTML_Element{
      * @param y pin-nodeのy座標
      * @param z pin-nodeのz座標
      */
-    constructor(id: string, x: string, y: string, z: string, set_function: ()=>void){
-        super(id, z, "PIN", "div")
+    constructor(id: string, x: string, y: string, z: string, set_function: ()=>void, url :string = ""){
+        super(id, z, url, "PIN", "div")
         this.x = x;
         this.y = y;
-        this.set_function = set_function
+        this.set_function = set_function;
     }
     
     set_Value(){
@@ -158,7 +165,7 @@ class Comment_Node extends HTML_Element{
     comment: string;
     add_zindex: number;
 
-    constructor(id: string, z: string, comment: string){
+    constructor(id: string, z: string, comment: string, url :string = ""){
         super(id, z)
         this.comment = comment;
         this.add_zindex = 1;
@@ -184,7 +191,7 @@ class Close_Node extends HTML_Element{
     add_zindex: number;
     set_function: ()=>void;
 
-    constructor(id: string, z: string, set_function: ()=>void){
+    constructor(id: string, z: string, set_function: ()=>void, url :string = ""){
         super(id, z, "close", "div")
         this.add_zindex = 2
         this.set_function = set_function
@@ -214,6 +221,7 @@ class Comments{
     y: string;
     z: string;
     comment: string;
+    url: string;
     
     /**
      * pin,comment,closeノードを作成するのに必要な値をセットする。
@@ -223,15 +231,16 @@ class Comments{
      * @param z pinノードのz座標(重なり順)
      * @param comment commentノードに表示するコメント内容
      */
-    constructor(id: string, x: string, y: string, z: string = "1000", comment: string){
-        this.comment_node = new Comment_Node(id, z, comment)
-        this.cls_node = new Close_Node(id, z, this.close_comment.bind(this))
-        this.pin_node = new PIN_Node(id, x, y, z,  this.Display_Comment.bind(this))
+    constructor(id: string, x: string, y: string, z: string = "1000", comment: string, url: string = ""){
+        this.comment_node = new Comment_Node(id, z, comment, url)
+        this.cls_node = new Close_Node(id, z, this.close_comment.bind(this), url)
+        this.pin_node = new PIN_Node(id, x, y, z,  this.Display_Comment.bind(this), url)
         this.id = id;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.comment = comment
+        this.comment = comment;
+        this.url = url;
     }
 
     /**
@@ -253,11 +262,13 @@ class Comments{
     }
 
     /**
-     * 新しいノードをサイトに追加した後、データベースに追加する
+     * コメントを新規作成時に実行。各ノードに現在のURLを格納
      */
-    createNewComments(db: DB){
-        this.createComments()
-        db.Save_PIN(this.id, this.x, this.y, this.comment)
+    set_CurrentURL(){
+        this.comment_node.set_CurrentURL();
+        this.cls_node.set_CurrentURL();
+        this.pin_node.set_CurrentURL();
+        this.url = location.origin;
     }
 
     /**
@@ -340,8 +351,8 @@ class CommentManager{
     /**
      * 各ノードを作成する。
      */
-    createComments(id: string, x: string, y: string, z: string = "1000", comment: string){
-        let node = new Comments(id, x, y, z, comment)
+    createComments(id: string, x: string, y: string, z: string = "1000", comment: string, url: string){
+        let node = new Comments(id, x, y, z, comment, url)
         node.createComments()
         node.appendComments()
     }
@@ -354,7 +365,8 @@ class CommentManager{
         let node = new Comments(id, x, y, z, comment)
         node.createComments()
         node.appendComments()
-        this.db.Save_PIN(id, x, y, comment)
+        node.set_CurrentURL()
+        this.db.Save_PIN(id, x, y, comment, node.url)
     }
 
     /*
@@ -364,7 +376,7 @@ class CommentManager{
    loadComment(){
         let load_comments = this.db.Load_Comment()
         load_comments.forEach(e => {
-        this.createComments(e.id, e.x, e.y, "1000", e.comment)
+        this.createComments(e.id, e.x, e.y, "1000", e.comment, e.url)
     });
    }
 }
