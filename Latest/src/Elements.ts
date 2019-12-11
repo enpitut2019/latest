@@ -48,29 +48,43 @@ class HTML_Element {
      * ノードにidをセットする。
      */
     set_style(){
-        this.node.style.padding = "10px"
+        /*this.node.style.padding = "10px"
         this.node.style.marginBottom = "10px"
         this.node.style.border = "1px solid #333333"
-        this.node.style.backgroundColor = "#ffff99"
+        this.node.style.backgroundColor = "#ffff99"*/
+        
+        //付箋スタイル
+        this.node.style.color = "#404040"
+        this.node.style.borderLeft = "solid 6px #1fa67a"
+        this.node.style.borderBottom = "solid 2px #dadada"
+        this.node.style.background = "whitesmoke"
+        this.node.style.marginBottom = "5px"
+        this.node.style.lineHeight = "1.5"
+        this.node.style.padding = "0.5em"
+        this.node.style.listStyleType = "none!important"
+        this.node.style.fontSize = "14px"
     }
 
     /**
      * ボタン用のスタイル
      */
-    set_buttonstyle(){// l142で使用
+    set_buttonstyle(){// 142行目で使用
+        //丸スタイル
         this.node.style.display = "inline-block"
         this.node.style.textDecoration = "none"
         this.node.style.background = "#ff8181"
         this.node.style.color = "#FFF"
-        this.node.style.width = "20px"
-        this.node.style.height = "20px"
-        this.node.style.lineHeight = "20px"
+        this.node.style.width = "15px"
+        this.node.style.height = "15px"
+        this.node.style.lineHeight = "15px"
         this.node.style.borderRadius = "50%"
         this.node.style.textAlign = "center"
         this.node.style.fontWeight = "bold"
         this.node.style.overflow = "hidden"
-        this.node.style.boxShadow = "0px 1px 1px rgba(0,0,0,0.29)"
-        this.node.style.borderBottom = "solid 1px #bd6565"
+        //this.node.style.boxShadow = "0px 1px 1px rgba(0,0,0,0.29)"
+        //this.node.style.borderBottom = "solid 2px #bd6565"
+        this.node.style.opacity = "0.8"
+        this.node.style.border = "solid 1px rgba(0,0,0,0.6)"
     }
 
     /**
