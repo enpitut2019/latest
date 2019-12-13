@@ -44,6 +44,24 @@ class HTML_Element {
         this.node.style.border = "1px solid #333333";
         this.node.style.backgroundColor = "#ffff99";
     }
+    set_buttonstyle() {
+        //丸スタイル
+        this.node.style.display = "inline-block";
+        this.node.style.textDecoration = "none";
+        this.node.style.background = "#ff8181";
+        this.node.style.color = "#FFF";
+        this.node.style.width = "15px";
+        this.node.style.height = "15px";
+        this.node.style.lineHeight = "15px";
+        this.node.style.borderRadius = "50%";
+        this.node.style.textAlign = "center";
+        this.node.style.fontWeight = "bold";
+        this.node.style.overflow = "hidden";
+        //this.node.style.boxShadow = "0px 1px 1px rgba(0,0,0,0.29)"
+        //this.node.style.borderBottom = "solid 2px #bd6565"
+        this.node.style.opacity = "0.8";
+        this.node.style.border = "solid 1px rgba(0,0,0,0.6)";
+    }
     /**
      * カーソルの表示方法を設定
      * @param type ノード上のカーソルの表示方法を指定
@@ -114,7 +132,7 @@ class PIN_Node extends HTML_Element {
         // 表示する言葉(将来的には画像)
         super.set_Image();
         // 見た目の設定
-        super.set_style();
+        super.set_buttonstyle();
         super.set_cursor("pointer");
         // クリックしたときのアクションをセット
         super.set_Function(this.set_function);
