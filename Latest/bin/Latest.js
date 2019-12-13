@@ -148,6 +148,7 @@ class Comment_Node extends HTML_Element {
         this.node.innerHTML = this.comment;
         // zIndexを追加
         super.add_zIndex(this.add_zindex);
+        this.node.style.color = "black";
     }
 }
 /**
