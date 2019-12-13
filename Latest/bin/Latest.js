@@ -60,7 +60,7 @@ class HTML_Element {
         //this.node.style.boxShadow = "0px 1px 1px rgba(0,0,0,0.29)"
         //this.node.style.borderBottom = "solid 2px #bd6565"
         this.node.style.opacity = "0.8";
-        this.node.style.border = "solid 1px rgba(0,0,0,0.6)";
+        this.node.style.border = "solid 3px rgba(0,0,0,0.6)";
     }
     /**
      * カーソルの表示方法を設定
