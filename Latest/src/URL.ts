@@ -4,9 +4,9 @@ class URLManage {
     server_url: string
 
     constructor() {
-        this.current_url = location.origin;
+        this.current_url = location.href;
         this.server_url = "https://stark-coast-28712.herokuapp.com/comments";
-        console.log(this.current_url)
+        console.log("DEBUG: current_url = " + this.current_url)
     }
 
     get_url_get_from_url() :string{

@@ -19,6 +19,7 @@ class Form{
         let latest_div = document.createElement("div");
         latest_div.id = "latest_div";
         latest_div.style.backgroundColor = "#e6e6fa";
+        latest_div.style.zIndex = "1000000";
         document.body.appendChild(latest_div);
 ​
         // table作成
@@ -76,6 +77,26 @@ class Form{
     }
 
     private make_table_n(line_name: string, tbody: HTMLTableSectionElement, line_n: number): HTMLInputElement{
+        //table n行目作成
+        let tr = tbody.insertRow(-1);
+        tr.id = "latest_tr" + line_n;
+        //tabel n行目のheader作成。
+        let th= document.createElement("th");
+        th.id = "latest_th" + line_n;
+        th.textContent = line_name;
+        tr.appendChild(th);
+        //tabel n行目の値を作成。
+        let td = document.createElement("td");
+        td.id = "latest_td" + line_n;
+        let input: HTMLInputElement = <HTMLInputElement>document.createElement("input");
+        input.id = "input" + line_n;
+        td = <HTMLTableDataCellElement><unknown>input;
+        tr.appendChild(td);
+
+        return input;
+    }
+
+    private make_table_n_textarea(line_name: string, tbody: HTMLTableSectionElement, line_n: number): HTMLInputElement{
         //table n行目作成
         let tr = tbody.insertRow(-1);
         tr.id = "latest_tr" + line_n;

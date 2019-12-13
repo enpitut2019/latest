@@ -372,7 +372,7 @@ class DB {
                 }
             }
         }).done(function (data) {
-            console.log("DEBUG: SaveData = " + data);
+            console.log("DEBUG: SaveData = {id: " + data.comment.node_id + ", x: " + data.comment.x + ", y: " + data.comment.y + ", comment: " + data.comment.comment + ", url: " + data.comment.url + "}");
         });
     }
 }
@@ -447,6 +447,7 @@ class Form {
         let latest_div = document.createElement("div");
         latest_div.id = "latest_div";
         latest_div.style.backgroundColor = "#e6e6fa";
+        latest_div.style.zIndex = "1000000";
         document.body.appendChild(latest_div);
         // table作成
         let latest_table = document.createElement("table");
@@ -514,12 +515,30 @@ class Form {
         tr.appendChild(td);
         return input;
     }
+    make_table_n_textarea(line_name, tbody, line_n) {
+        //table n行目作成
+        let tr = tbody.insertRow(-1);
+        tr.id = "latest_tr" + line_n;
+        //tabel n行目のheader作成。
+        let th = document.createElement("th");
+        th.id = "latest_th" + line_n;
+        th.textContent = line_name;
+        tr.appendChild(th);
+        //tabel n行目の値を作成。
+        let td = document.createElement("td");
+        td.id = "latest_td" + line_n;
+        let input = document.createElement("input");
+        input.id = "input" + line_n;
+        td = input;
+        tr.appendChild(td);
+        return input;
+    }
 }
 class URLManage {
     constructor() {
-        this.current_url = location.origin;
+        this.current_url = location.href;
         this.server_url = "https://stark-coast-28712.herokuapp.com/comments";
-        console.log(this.current_url);
+        console.log("DEBUG: current_url = " + this.current_url);
     }
     get_url_get_from_url() {
         let get_url = "/get_from_url";
