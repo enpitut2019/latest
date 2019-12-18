@@ -305,6 +305,7 @@ class CommentManager {
         this.db = new DB();
         this.manageid = new ManageID();
         this.current_url = location.origin;
+        this.all_node = [];
     }
     /**
      * 各ノードを作成する。
@@ -316,6 +317,7 @@ class CommentManager {
         console.log("DEBUG: CreateComment = {id = " + id + ",x = " + x + ",y = " + y + ",z = " + z + ",comment = " + comment + ",url = " + url + "}");
         node.createComments();
         node.appendComments();
+        this.all_node.push(node);
     }
     /**
      * 新しいノードをサイトに追加した後、データベースに追加する
@@ -340,6 +342,13 @@ class CommentManager {
                 createComments(e.id, e.x, e.y, "1000", e.comment, e.url);
             });
         });
+    }
+    close_all_Comment() {
+        this.all_node.forEach(n => {
+            n.close_comment();
+        });
+    }
+    close_all_pin() {
     }
 }
 class DB {
@@ -430,6 +439,15 @@ class Mode {
         }
         else {
             this.form_unmake = true;
+        }
+    }
+    Change_reverse_mode() {
+        console.log("DEBUG: Mode" + this.flag);
+        if (this.flag == "read") {
+            this.flag = "write";
+        }
+        else {
+            this.flag = "read";
         }
     }
 }

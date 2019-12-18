@@ -336,7 +336,7 @@ class Comments{
     /**
      * コメントをクローズするための関数
      */
-    private close_comment() {
+    close_comment() {
         if ($("#"+this.cls_node.id).is(":visible")){
             $("#"+this.cls_node.id).hide()
             $("#"+this.comment_node.id).hide()
@@ -363,6 +363,7 @@ class CommentManager{
     private db: DB
     private manageid: ManageID
     private current_url: string
+    private all_node: Comments[]
     
     /**
      * db関係の変数を渡す。
@@ -371,6 +372,7 @@ class CommentManager{
         this.db = new DB()
         this.manageid = new ManageID()
         this.current_url = location.origin
+        this.all_node = []
     }
 
     /**
@@ -382,6 +384,7 @@ class CommentManager{
         console.log("DEBUG: CreateComment = {id = " + id + ",x = " + x + ",y = " + y + ",z = " + z + ",comment = " + comment + ",url = " + url + "}");
         node.createComments()
         node.appendComments()
+        this.all_node.push(node)
     }
 
     /**
@@ -408,5 +411,15 @@ class CommentManager{
                 createComments(e.id, e.x, e.y, "1000", e.comment, e.url)
             });
         });
+    }
+
+    close_all_Comment(){
+        this.all_node.forEach(n => {
+            n.close_comment()
+        });
+    }
+
+    close_all_pin(){
+        
     }
 }

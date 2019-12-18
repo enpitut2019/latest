@@ -37,4 +37,15 @@ class Mode{
             this.form_unmake = true;
         }
     }
+
+    Change_reverse_mode(): void{
+        
+        console.log("DEBUG: Mode" + this.flag)
+
+        if(this.flag == "read"){
+            this.flag = "write"
+        }else{
+            this.flag = "read"
+        }
+    }
 }

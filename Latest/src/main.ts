@@ -19,7 +19,19 @@ let menu = new Menu_Node()
 window.onload = function(){
     // コメントの読み込み
     comment_manager.loadComment()
-    menu.make_append_menubar()
+
+    // メニューバーを作成する。
+    menu.make_body()    
+    // 読み書き
+    menu.make_and_append_button(mode.Change_reverse_mode)
+    // 全ノードの表示・非表示
+    menu.make_and_append_button(comment_manager.close_all_Comment)
+    // 共有範囲指定
+    menu.make_and_append_button(function(){})
+    // ノードの表示・非表示
+    menu.make_and_append_button(comment_manager.close_all_pin)
+    // メニューバーを画面に追加
+    menu.appendmenubar()
 }
 
 //background.jsから送られたメッセージで機能を変更する
