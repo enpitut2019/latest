@@ -135,7 +135,7 @@ class PIN_Node extends HTML_Element {
         //super.set_Image()
         // 見た目の設定
         //super.set_buttonstyle()
-        //super.set_cursor("pointer")
+        super.set_cursor("pointer");
         // クリックしたときのアクションをセット
         super.set_Function(this.set_function);
     }
@@ -616,8 +616,8 @@ class Menu_Node {
     make_and_append_button(set_function) {
         let new_button = document.createElement("div");
         new_button.classList.add(this.uni_button_class);
-        this.button_index += 1;
         let only_button_class = this.uni_button_class + "--" + this.button_n_list[this.button_index];
+        this.button_index += 1;
         new_button.classList.add(only_button_class);
         new_button.onclick = function () {
             set_function();

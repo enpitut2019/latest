@@ -21,6 +21,9 @@
       "scripts" : ["bin/background.js"],
       "persistent": false
     },
+    "web_accessible_resources": [
+      "*.png"
+    ],
     "content_scripts": [{
       "matches": [
         "https://*/*", "http://*/*"
