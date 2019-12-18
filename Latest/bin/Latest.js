@@ -11,7 +11,7 @@ class HTML_Element {
      * @param element_type elementの属性(基本的に"div")
      * @param click_function クリックしたときに発動する関数(指定しなくても良い)
      */
-    constructor(id, z, url = "", type = "", element_type = "div") {
+    constructor(id, z, url = "", type = "", element_type = "div", class_name = "") {
         // elementの作成
         this.node = document.createElement(element_type);
         this.uniid = id;
@@ -20,12 +20,14 @@ class HTML_Element {
         this.type = type;
         this.element_type = type;
         this.url = url;
+        this.class = class_name;
     }
     set_Value() {
         // idの付与
         this.node.id = this.id;
         // z位置(重なり順を決定)
         this.node.style.zIndex = this.z;
+        this.node.className = this.class;
     }
     /**
      * 指定した値分zIndex(重なり順)を追加
@@ -120,7 +122,7 @@ class PIN_Node extends HTML_Element {
      * @param z pin-nodeのz座標
      */
     constructor(id, x, y, z, set_function, url = "") {
-        super(id, z, url, "PIN", "div");
+        super(id, z, url, "PIN", "div", "latest_pin");
         this.x = x;
         this.y = y;
         this.set_function = set_function;
@@ -134,6 +136,7 @@ class PIN_Node extends HTML_Element {
         // 見た目の設定
         super.set_buttonstyle();
         super.set_cursor("pointer");
+        super.set_display("visible");
         // クリックしたときのアクションをセット
         super.set_Function(this.set_function);
     }
@@ -153,7 +156,7 @@ class PIN_Node extends HTML_Element {
  */
 class Comment_Node extends HTML_Element {
     constructor(id, z, comment, url = "") {
-        super(id, z);
+        super(id, z, "", "", "div", "latest_comment");
         this.comment = comment;
         this.add_zindex = 1;
     }
@@ -174,7 +177,7 @@ class Comment_Node extends HTML_Element {
  */
 class Close_Node extends HTML_Element {
     constructor(id, z, set_function, url = "") {
-        super(id, z, "close", "div");
+        super(id, z, "", "close", "div", "latest_close");
         this.add_zindex = 2;
         this.set_function = set_function;
     }
@@ -303,6 +306,7 @@ class CommentManager {
         this.db = new DB();
         this.manageid = new ManageID();
         this.current_url = location.origin;
+        this.all_node = [];
     }
     /**
      * 各ノードを作成する。
@@ -314,6 +318,7 @@ class CommentManager {
         console.log("DEBUG: CreateComment = {id = " + id + ",x = " + x + ",y = " + y + ",z = " + z + ",comment = " + comment + ",url = " + url + "}");
         node.createComments();
         node.appendComments();
+        this.all_node.push(node);
     }
     /**
      * 新しいノードをサイトに追加した後、データベースに追加する
@@ -338,6 +343,13 @@ class CommentManager {
                 createComments(e.id, e.x, e.y, "1000", e.comment, e.url);
             });
         });
+    }
+    close_all_Comment() {
+        this.all_node.forEach(n => {
+            n.close_comment();
+        });
+    }
+    close_all_pin() {
     }
 }
 class DB {
@@ -428,6 +440,15 @@ class Mode {
         }
         else {
             this.form_unmake = true;
+        }
+    }
+    Change_reverse_mode() {
+        console.log("DEBUG: Mode" + this.flag);
+        if (this.flag == "read") {
+            this.flag = "write";
+        }
+        else {
+            this.flag = "read";
         }
     }
 }
@@ -581,6 +602,33 @@ class URLManage {
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 }
+class Menu_Node {
+    constructor() {
+        this.body = null;
+        this.menu_class = "latest_menubar";
+        this.uni_button_class = "latest_button";
+        this.button_n_list = ["one", "two", "three", "four"];
+        this.button_index = 0;
+    }
+    make_body() {
+        this.body = document.createElement("div");
+        this.body.className = this.menu_class;
+    }
+    make_and_append_button(set_function) {
+        let new_button = document.createElement("div");
+        new_button.classList.add(this.uni_button_class);
+        this.button_index += 1;
+        let only_button_class = this.uni_button_class + "--" + this.button_n_list[this.button_index];
+        new_button.classList.add(only_button_class);
+        new_button.onclick = function () {
+            set_function();
+        };
+        this.body.appendChild(new_button);
+    }
+    appendmenubar() {
+        document.body.append(this.body);
+    }
+}
 class Debug {
     constructor() {
     }
@@ -603,16 +651,30 @@ class Debug {
 /// <reference path = "ManageID.ts" />
 /// <reference path = "Form.ts" />
 /// <reference path = "URL.ts" />
+/// <reference path = "Menu.ts" />
 /// <reference path = "Debug.ts" />
 // 変数を宣言
 let mode = new Mode();
 let comment_manager = new CommentManager();
 let debug = new Debug();
 let form = new Form();
+let menu = new Menu_Node();
 // サイトを読み込んだときに実行
 window.onload = function () {
     // コメントの読み込み
     comment_manager.loadComment();
+    // メニューバーを作成する。
+    menu.make_body();
+    // 読み書き
+    menu.make_and_append_button(mode.Change_reverse_mode);
+    // 全ノードの表示・非表示
+    menu.make_and_append_button(comment_manager.close_all_Comment);
+    // 共有範囲指定
+    menu.make_and_append_button(function () { });
+    // ノードの表示・非表示
+    menu.make_and_append_button(comment_manager.close_all_pin);
+    // メニューバーを画面に追加
+    menu.appendmenubar();
 };
 //background.jsから送られたメッセージで機能を変更する
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {

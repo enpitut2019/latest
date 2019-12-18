@@ -7,8 +7,8 @@ class Menu_Node{
     uni_button_class: string;
     
     constructor(){
-        this.body = new HTMLElement();
-        this.menu_class = "latest_manubar"
+        this.body = null
+        this.menu_class = "latest_menubar"
         this.uni_button_class = "latest_button"
         this.button_n_list = ["one", "two", "three", "four"]
         this.button_index = 0
@@ -19,29 +19,17 @@ class Menu_Node{
         this.body.className = this.menu_class;
     }
     
-    make_and_append_button(){
+    make_and_append_button(set_function: ()=>void){
         let new_button = document.createElement("div");
         new_button.classList.add(this.uni_button_class);
         this.button_index += 1
-        let only_button_class = this.uni_button_class + this.button_n_list[this.button_index].toString()
+        let only_button_class = this.uni_button_class + "--" + this.button_n_list[this.button_index]
         new_button.classList.add(only_button_class);
+        new_button.onclick = function() {
+            set_function()
+        }
 
         this.body.appendChild(new_button);
-    }
-
-    make_append_menubar(){
-        menu.make_body()
-        
-        // 読み書き
-        menu.make_and_append_button()
-        // 全ノードの表示・非表示
-        menu.make_and_append_button()
-        // 共有範囲指定
-        menu.make_and_append_button()
-        // ノードの表示・非表示
-        menu.make_and_append_button()
-
-        menu.appendmenubar()
     }
 
     appendmenubar(){
