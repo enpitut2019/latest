@@ -5,6 +5,7 @@
 /// <reference path = "ManageID.ts" />
 /// <reference path = "Form.ts" />
 /// <reference path = "URL.ts" />
+/// <reference path = "Menu.ts" />
 /// <reference path = "Debug.ts" />
 
 // 変数を宣言
@@ -12,11 +13,13 @@ let mode = new Mode()
 let comment_manager = new CommentManager()
 let debug = new Debug()
 let form = new Form()
+let menu = new Menu_Node()
 
 // サイトを読み込んだときに実行
 window.onload = function(){
     // コメントの読み込み
     comment_manager.loadComment()
+    menu.make_append_menubar()
 }
 
 //background.jsから送られたメッセージで機能を変更する

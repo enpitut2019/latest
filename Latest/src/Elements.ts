@@ -10,6 +10,7 @@ class HTML_Element {
     type: string;
     element_type: string;
     url: string;
+    class: string;
     
     /**
      * elementを作成する。(idとzは必ず指定する)
@@ -20,7 +21,7 @@ class HTML_Element {
      * @param element_type elementの属性(基本的に"div") 
      * @param click_function クリックしたときに発動する関数(指定しなくても良い)
      */
-    constructor(id: string, z: string, url: string = "", type: string = "", element_type:string = "div"){
+    constructor(id: string, z: string, url: string = "", type: string = "", element_type:string = "div", class_name:string = ""){
         // elementの作成
         this.node = document.createElement(element_type);
         this.uniid = id;
@@ -29,6 +30,7 @@ class HTML_Element {
         this.type = type;
         this.element_type = type;
         this.url = url;
+        this.class = class_name;
     }
 
     set_Value(){
@@ -36,6 +38,7 @@ class HTML_Element {
         this.node.id = this.id
         // z位置(重なり順を決定)
         this.node.style.zIndex = this.z
+        this.node.className = this.class
     }
 
     /**
@@ -145,7 +148,7 @@ class PIN_Node extends HTML_Element{
      * @param z pin-nodeのz座標
      */
     constructor(id: string, x: string, y: string, z: string, set_function: ()=>void, url :string = ""){
-        super(id, z, url, "PIN", "div")
+        super(id, z, url, "PIN", "div", "latest_pin")
         this.x = x;
         this.y = y;
         this.set_function = set_function;
@@ -185,7 +188,7 @@ class Comment_Node extends HTML_Element{
     add_zindex: number;
 
     constructor(id: string, z: string, comment: string, url :string = ""){
-        super(id, z)
+        super(id, z, "", "", "div", "latest_comment")
         this.comment = comment;
         this.add_zindex = 1;
     }
@@ -212,7 +215,7 @@ class Close_Node extends HTML_Element{
     set_function: ()=>void;
 
     constructor(id: string, z: string, set_function: ()=>void, url :string = ""){
-        super(id, z, "close", "div")
+        super(id, z, "", "close", "div", "latest_close")
         this.add_zindex = 2
         this.set_function = set_function
     }
