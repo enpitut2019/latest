@@ -7,7 +7,7 @@ class Menu_Node{
     uni_button_class: string;
     
     constructor(){
-        this.body = null
+        this.body = document.createElement("div");
         this.menu_class = "latest_menubar"
         this.uni_button_class = "latest_button"
         this.button_n_list = ["one", "two", "three", "four"]
