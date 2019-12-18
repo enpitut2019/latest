@@ -158,11 +158,11 @@ class PIN_Node extends HTML_Element{
         super.set_Value()
         // 位置を付与(absolute)
         this.Set_Position_absolute(this.x, this.y)
-        // 表示する言葉(将来的には画像)
-        super.set_Image()
+        //// 表示する言葉(将来的には画像)
+        //super.set_Image()
         // 見た目の設定
-        super.set_buttonstyle()
-        super.set_cursor("pointer")
+        //super.set_buttonstyle()
+        //super.set_cursor("pointer")
         // クリックしたときのアクションをセット
         super.set_Function(this.set_function)
     }

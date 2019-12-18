@@ -1,0 +1,57 @@
+.latest_menubar{
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  z-index: 9999999;
+  background-image:url("img/eye.png");
+}
+
+.latest_button{
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: #FFF;
+    width: 50px;
+    height: 50px;
+    line-height: 30px;
+    padding: 5px;
+    font-size: 25px;
+    border-radius: 50%;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.25), inset 0 -2px 0px rgba(0, 0, 0, 0.18);
+    transition: .2s;
+    z-index: 10000000;
+  }
+  /*
+  .latest_button .fa {
+    line-height: 30px;
+  }*/
+  .latest_button:hover {
+    box-shadow: none;
+    opacity: 0.6;
+  }
+  
+  .latest_button--one {
+    background-color: #1da1f3;
+    border: solid 5px #1da1f3;
+    background-image:url("img/eye.png");
+    z-index: 10000001;
+  }
+  
+  .latest_button--two {
+    background: #3b75d4;
+    border: solid 5px #3b75d4;
+  }
+  
+  .latest_button--three {
+    background-color: #ef4d4d;
+    border: solid 5px #ef4d4d;
+  }
+  
+  .latest_button--four {
+    background: #7ece46;
+    border: solid 5px #7ece46;
+  }

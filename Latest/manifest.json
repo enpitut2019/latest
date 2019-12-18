@@ -29,7 +29,9 @@
         "include/jquery.min.js", "include/jquery-ui.min.js", "bin/Latest.js"
       ],
       "css": [
-        "include/jquery-ui.css"
+        "include/jquery-ui.css",
+        "css/menu-ui.css",
+        "css/comment-ui.css"
       ]
     }]
   }
