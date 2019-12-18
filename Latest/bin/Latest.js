@@ -131,12 +131,11 @@ class PIN_Node extends HTML_Element {
         super.set_Value();
         // 位置を付与(absolute)
         this.Set_Position_absolute(this.x, this.y);
-        // 表示する言葉(将来的には画像)
-        super.set_Image();
+        //// 表示する言葉(将来的には画像)
+        //super.set_Image()
         // 見た目の設定
-        super.set_buttonstyle();
-        super.set_cursor("pointer");
-        super.set_display("visible");
+        //super.set_buttonstyle()
+        //super.set_cursor("pointer")
         // クリックしたときのアクションをセット
         super.set_Function(this.set_function);
     }
@@ -604,10 +603,10 @@ class URLManage {
 }
 class Menu_Node {
     constructor() {
-        this.body = null;
+        this.body = document.createElement("div");
         this.menu_class = "latest_menubar";
         this.uni_button_class = "latest_button";
-        this.button_n_list = ["one", "two", "three", "four"];
+        this.button_n_list = ["one", "two", "three", "four", "five"];
         this.button_index = 0;
     }
     make_body() {

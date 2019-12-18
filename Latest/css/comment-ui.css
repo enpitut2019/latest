@@ -1,0 +1,68 @@
+/*.latest_pin {
+    position: relative;
+    display: inline-block;
+    margin: 1.5em 0;
+    padding: 7px 10px;
+    min-width: 8px;
+    max-width: 100%;
+    color: #555;
+    font-size: 8px;
+    background: #e0edff;
+    border: solid 2px black;
+  }
+  
+  .latest_pin:before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border: 5px solid black;
+    border-top: 5px solid #e0edff;
+  }
+  
+  .latest_pin p {
+    margin: 0;
+    padding: 0;
+  }*/
+
+  .latest_pin {
+    position: relative;
+    display: inline-block;
+    margin: 1.5em 0;
+    padding: 7px 10px;
+    min-width: 15px;
+    max-width: 100%;
+    color: #555;
+    font-size: 5px;
+    background: #FFF;
+    border: solid 3px #555;
+    box-sizing: border-box;
+  }
+  
+  .latest_pin:before {
+    content: "";
+    position: absolute;
+    bottom: -9px;
+    left: 50%;
+    margin-left: -5px;
+    border: 5px solid transparent;
+    border-top: 5px solid #FFF;
+    z-index: 2;
+  }
+  
+  .latest_pin:after {
+    content: "";
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    margin-left: -6px;
+    border: 6px solid transparent;
+    border-top: 6px solid #555;
+    z-index: 1;
+  }
+  
+  .latest_pin p {
+    margin: 0;
+    padding: 0;
+  }
