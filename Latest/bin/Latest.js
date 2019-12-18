@@ -606,32 +606,23 @@ class Menu_Node {
         this.body = document.createElement("div");
         this.menu_class = "latest_menubar";
         this.uni_button_class = "latest_button";
-        this.button_n_list = ["one", "two", "three", "four"];
+        this.button_n_list = ["one", "two", "three", "four", "five"];
         this.button_index = 0;
     }
     make_body() {
         this.body = document.createElement("div");
         this.body.className = this.menu_class;
     }
-    make_and_append_button() {
+    make_and_append_button(set_function) {
         let new_button = document.createElement("div");
         new_button.classList.add(this.uni_button_class);
         this.button_index += 1;
-        let only_button_class = this.uni_button_class + this.button_n_list[this.button_index];
+        let only_button_class = this.uni_button_class + "--" + this.button_n_list[this.button_index];
         new_button.classList.add(only_button_class);
+        new_button.onclick = function () {
+            set_function();
+        };
         this.body.appendChild(new_button);
-    }
-    make_append_menubar() {
-        menu.make_body();
-        // 読み書き
-        menu.make_and_append_button();
-        // 全ノードの表示・非表示
-        menu.make_and_append_button();
-        // 共有範囲指定
-        menu.make_and_append_button();
-        // ノードの表示・非表示
-        menu.make_and_append_button();
-        menu.appendmenubar();
     }
     appendmenubar() {
         document.body.append(this.body);
@@ -671,7 +662,18 @@ let menu = new Menu_Node();
 window.onload = function () {
     // コメントの読み込み
     comment_manager.loadComment();
-    menu.make_append_menubar();
+    // メニューバーを作成する。
+    menu.make_body();
+    // 読み書き
+    menu.make_and_append_button(mode.Change_reverse_mode);
+    // 全ノードの表示・非表示
+    menu.make_and_append_button(comment_manager.close_all_Comment);
+    // 共有範囲指定
+    menu.make_and_append_button(function () { });
+    // ノードの表示・非表示
+    menu.make_and_append_button(comment_manager.close_all_pin);
+    // メニューバーを画面に追加
+    menu.appendmenubar();
 };
 //background.jsから送られたメッセージで機能を変更する
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
