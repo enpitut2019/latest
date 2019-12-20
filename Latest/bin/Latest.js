@@ -135,7 +135,7 @@ class PIN_Node extends HTML_Element {
         //super.set_Image()
         // 見た目の設定
         //super.set_buttonstyle()
-        //super.set_cursor("pointer")
+        super.set_cursor("pointer");
         // クリックしたときのアクションをセット
         super.set_Function(this.set_function);
         super.set_display("");

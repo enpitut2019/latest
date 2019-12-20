@@ -37,21 +37,23 @@
   .latest_button--one {
     background-color: #1da1f3;
     border: solid 5px #1da1f3;
-    background-image:url("img/eye.png");
-    z-index: 10000001;
+    background:url("chrome-extension://bcnfaooohclifnkgpnfknbnpbmifkdli/img/eye.png");
   }
   
   .latest_button--two {
     background: #3b75d4;
     border: solid 5px #3b75d4;
+    background:url("chrome-extension://bcnfaooohclifnkgpnfknbnpbmifkdli/img/2.png");
   }
   
   .latest_button--three {
     background-color: #ef4d4d;
     border: solid 5px #ef4d4d;
+    background:url("chrome-extension://bcnfaooohclifnkgpnfknbnpbmifkdli/img/3.png");
   }
   
   .latest_button--four {
     background: #7ece46;
     border: solid 5px #7ece46;
+    background:url("chrome-extension://bcnfaooohclifnkgpnfknbnpbmifkdli/img/4.png");
   }
