@@ -325,7 +325,8 @@ class CommentManager {
      */
     creteNewComments(x, y, z = "1000", comment) {
         let id = this.manageid.get_Random_id();
-        let node = new Comments(id, x, y, z, comment);
+        let [relative_x, relative_y] = this.Change_from_abs_to_rel(Number(x), Number(y));
+        let node = new Comments(id, String(relative_x), String(relative_y), z, comment);
         node.createComments();
         node.appendComments();
         node.set_CurrentURL();
@@ -337,10 +338,12 @@ class CommentManager {
     */
     loadComment() {
         let createComments = this.createComments.bind(this);
+        let changefromreltoabs = this.Change_from_rel_to_abs.bind(this);
         this.db.Load_Comment()
             .then(function (e) {
             e.forEach(e => {
-                createComments(e.id, e.x, e.y, "1000", e.comment, e.url);
+                let [absolute_x, absolute_y] = changefromreltoabs(Number(e.x), Number(e.y));
+                createComments(e.id, String(absolute_x), String(absolute_y), "1000", e.comment, e.url);
             });
         });
     }
@@ -368,6 +371,16 @@ class CommentManager {
                 }
             }
         });
+    }
+    Change_from_abs_to_rel(abs_x, abs_y) {
+        let rel_x = abs_x / document.body.clientWidth;
+        let rel_y = abs_y / document.body.clientHeight;
+        return [rel_x, rel_y];
+    }
+    Change_from_rel_to_abs(rel_x, rel_y) {
+        let abs_x = rel_x * document.body.clientWidth;
+        let abs_y = rel_y * document.body.clientHeight;
+        return [abs_x, abs_y];
     }
 }
 class DB {
