@@ -23,13 +23,13 @@ window.onload = function(){
     // メニューバーを作成する。
     menu.make_body()    
     // 読み書き
-    menu.make_and_append_button(mode.Change_reverse_mode)
+    menu.make_and_append_button(mode.Change_reverse_mode.bind(mode))
     // 全ノードの表示・非表示
-    menu.make_and_append_button(comment_manager.close_all_Comment)
+    menu.make_and_append_button(comment_manager.close_all_Comment.bind(comment_manager))
     // 共有範囲指定
     menu.make_and_append_button(function(){})
     // ノードの表示・非表示
-    menu.make_and_append_button(comment_manager.close_all_pin)
+    menu.make_and_append_button(comment_manager.close_all_pin.bind(comment_manager))
     // メニューバーを画面に追加
     menu.appendmenubar()
 }

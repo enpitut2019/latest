@@ -22,8 +22,8 @@ class Menu_Node{
     make_and_append_button(set_function: ()=>void){
         let new_button = document.createElement("div");
         new_button.classList.add(this.uni_button_class);
-        this.button_index += 1
         let only_button_class = this.uni_button_class + "--" + this.button_n_list[this.button_index]
+        this.button_index += 1
         new_button.classList.add(only_button_class);
         new_button.onclick = function() {
             set_function()

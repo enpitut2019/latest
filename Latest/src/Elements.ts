@@ -165,6 +165,7 @@ class PIN_Node extends HTML_Element{
         //super.set_cursor("pointer")
         // クリックしたときのアクションをセット
         super.set_Function(this.set_function)
+        super.set_display("")
     }
 
     /**
@@ -404,8 +405,8 @@ class CommentManager{
     読み込んだ内容を１つずつ取り出してCreate_PIN()にいれる。
     */
     loadComment(){
-        let createComments = this.createComments
-        this.db.Load_Comment()    
+        let createComments = this.createComments.bind(this)
+        this.db.Load_Comment()
         .then(function(e: Array<any>) {
             e.forEach(e => {
                 createComments(e.id, e.x, e.y, "1000", e.comment, e.url)
@@ -420,6 +421,22 @@ class CommentManager{
     }
 
     close_all_pin(){
-        
+        var flag = true;
+        this.all_node.forEach(n => {
+            if ($('#'+n.pin_node.node.id).is(":hidden")){
+                flag = false;
+            }
+        });
+        this.all_node.forEach(n => {
+            if (flag){
+                if($("#"+n.pin_node.id).is(":visible")){
+                    $("#"+n.pin_node.id).hide()
+                }
+            }else{
+                if($("#"+n.pin_node.id).is(":hidden")){
+                    $("#"+n.pin_node.id).show()
+                }
+            }
+        });
     }
 }

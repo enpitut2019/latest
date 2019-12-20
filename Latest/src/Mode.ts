@@ -44,6 +44,7 @@ class Mode{
 
         if(this.flag == "read"){
             this.flag = "write"
+            this.form_unmake = false;
         }else{
             this.flag = "read"
         }

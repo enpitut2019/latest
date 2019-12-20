@@ -1,6 +1,6 @@
 {
     "name": "Latest_ver.beta-test",
-    "version": "0.4.0",
+    "version": "0.4.3",
     "manifest_version": 2,
     "description": "サイトにコメントを付与したり、追加したりする事ができる拡張です",
     "icons":{

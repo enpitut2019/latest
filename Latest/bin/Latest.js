@@ -138,6 +138,7 @@ class PIN_Node extends HTML_Element {
         //super.set_cursor("pointer")
         // クリックしたときのアクションをセット
         super.set_Function(this.set_function);
+        super.set_display("");
     }
     /**
      * pin-nodeの座標を指定する。
@@ -335,7 +336,7 @@ class CommentManager {
     読み込んだ内容を１つずつ取り出してCreate_PIN()にいれる。
     */
     loadComment() {
-        let createComments = this.createComments;
+        let createComments = this.createComments.bind(this);
         this.db.Load_Comment()
             .then(function (e) {
             e.forEach(e => {
@@ -349,6 +350,24 @@ class CommentManager {
         });
     }
     close_all_pin() {
+        var flag = true;
+        this.all_node.forEach(n => {
+            if ($('#' + n.pin_node.node.id).is(":hidden")) {
+                flag = false;
+            }
+        });
+        this.all_node.forEach(n => {
+            if (flag) {
+                if ($("#" + n.pin_node.id).is(":visible")) {
+                    $("#" + n.pin_node.id).hide();
+                }
+            }
+            else {
+                if ($("#" + n.pin_node.id).is(":hidden")) {
+                    $("#" + n.pin_node.id).show();
+                }
+            }
+        });
     }
 }
 class DB {
@@ -445,6 +464,7 @@ class Mode {
         console.log("DEBUG: Mode" + this.flag);
         if (this.flag == "read") {
             this.flag = "write";
+            this.form_unmake = false;
         }
         else {
             this.flag = "read";
@@ -616,8 +636,8 @@ class Menu_Node {
     make_and_append_button(set_function) {
         let new_button = document.createElement("div");
         new_button.classList.add(this.uni_button_class);
-        this.button_index += 1;
         let only_button_class = this.uni_button_class + "--" + this.button_n_list[this.button_index];
+        this.button_index += 1;
         new_button.classList.add(only_button_class);
         new_button.onclick = function () {
             set_function();
@@ -665,13 +685,13 @@ window.onload = function () {
     // メニューバーを作成する。
     menu.make_body();
     // 読み書き
-    menu.make_and_append_button(mode.Change_reverse_mode);
+    menu.make_and_append_button(mode.Change_reverse_mode.bind(mode));
     // 全ノードの表示・非表示
-    menu.make_and_append_button(comment_manager.close_all_Comment);
+    menu.make_and_append_button(comment_manager.close_all_Comment.bind(comment_manager));
     // 共有範囲指定
     menu.make_and_append_button(function () { });
     // ノードの表示・非表示
-    menu.make_and_append_button(comment_manager.close_all_pin);
+    menu.make_and_append_button(comment_manager.close_all_pin.bind(comment_manager));
     // メニューバーを画面に追加
     menu.appendmenubar();
 };
