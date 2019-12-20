@@ -30,8 +30,10 @@ window.onload = function(){
     menu.make_and_append_button(function(){})
     // ノードの表示・非表示
     menu.make_and_append_button(comment_manager.close_all_pin.bind(comment_manager))
-    menu.get_img("eye.png")
-    menu.get_img("eye_off.png")
+    menu.get_img("1_off.png")
+    menu.get_img("2.png")
+    menu.get_img("3.png")
+    menu.get_img("4.png")
     // メニューバーを画面に追加
     menu.appendmenubar()
 }

@@ -438,6 +438,7 @@ class DB {
             }
         }).done(function (data) {
             console.log("DEBUG: data = " + data);
+            console.log("DEBUG: data = " + data.comment);
             console.log("DEBUG: SaveData = {id: " + data.comment.node_id + ", x: " + data.comment.x + ", y: " + data.comment.y + ", comment: " + data.comment.comment + ", url: " + data.comment.url + "}");
         });
     }
@@ -478,7 +479,7 @@ class Mode {
         }
     }
     Change_reverse_mode() {
-        console.log("DEBUG: Mode" + this.flag);
+        console.log("DEBUG: Mode: flag = " + this.flag);
         if (this.flag == "read") {
             this.flag = "write";
             this.form_unmake = false;
@@ -720,8 +721,10 @@ window.onload = function () {
     menu.make_and_append_button(function () { });
     // ノードの表示・非表示
     menu.make_and_append_button(comment_manager.close_all_pin.bind(comment_manager));
-    menu.get_img("eye.png");
-    menu.get_img("eye_off.png");
+    menu.get_img("1_off.png");
+    menu.get_img("2.png");
+    menu.get_img("3.png");
+    menu.get_img("4.png");
     // メニューバーを画面に追加
     menu.appendmenubar();
 };
