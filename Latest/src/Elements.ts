@@ -394,11 +394,12 @@ class CommentManager{
     creteNewComments(x: string, y: string, z: string = "1000", comment: string){
         let id = this.manageid.get_Random_id()
         let [relative_x, relative_y] = this.Change_from_abs_to_rel(Number(x), Number(y));
-        let node = new Comments(id, String(relative_x), String(relative_y), z, comment)
+        console.log("DEBUG: relative_x = "+relative_x + ", relative_y = " + relative_y)
+        let node = new Comments(id, x, y, z, comment)
         node.createComments()
         node.appendComments()
         node.set_CurrentURL()
-        this.db.Save_PIN(id, x, y, comment)
+        this.db.Save_PIN(id, String(relative_x), String(relative_y), comment)
     }
 
     /*
@@ -412,6 +413,7 @@ class CommentManager{
         .then(function(e: Array<any>) {
             e.forEach(e => {
                 let [absolute_x, absolute_y] = changefromreltoabs(Number(e.x), Number(e.y));
+                console.log("DEBUG: absolute_x = "+absolute_x + ", absolute_y = " + absolute_y)
                 createComments(e.id, String(absolute_x), String(absolute_y), "1000", e.comment, e.url)
             });
         });

@@ -326,11 +326,12 @@ class CommentManager {
     creteNewComments(x, y, z = "1000", comment) {
         let id = this.manageid.get_Random_id();
         let [relative_x, relative_y] = this.Change_from_abs_to_rel(Number(x), Number(y));
-        let node = new Comments(id, String(relative_x), String(relative_y), z, comment);
+        console.log("DEBUG: relative_x = " + relative_x + ", relative_y = " + relative_y);
+        let node = new Comments(id, x, y, z, comment);
         node.createComments();
         node.appendComments();
         node.set_CurrentURL();
-        this.db.Save_PIN(id, x, y, comment);
+        this.db.Save_PIN(id, String(relative_x), String(relative_y), comment);
     }
     /*
     サーバーから情報を読み込む
@@ -343,6 +344,7 @@ class CommentManager {
             .then(function (e) {
             e.forEach(e => {
                 let [absolute_x, absolute_y] = changefromreltoabs(Number(e.x), Number(e.y));
+                console.log("DEBUG: absolute_x = " + absolute_x + ", absolute_y = " + absolute_y);
                 createComments(e.id, String(absolute_x), String(absolute_y), "1000", e.comment, e.url);
             });
         });
@@ -421,6 +423,7 @@ class DB {
      */
     Save_PIN(id, x, y, comment) {
         // サーバに形式を整えて送信 
+        console.log("DEBUG id = " + id + "x = " + x);
         $.ajax({
             type: 'POST',
             url: this.urlmanage.server_url,
@@ -434,6 +437,7 @@ class DB {
                 }
             }
         }).done(function (data) {
+            console.log("DEBUG: data = " + data);
             console.log("DEBUG: SaveData = {id: " + data.comment.node_id + ", x: " + data.comment.x + ", y: " + data.comment.y + ", comment: " + data.comment.comment + ", url: " + data.comment.url + "}");
         });
     }

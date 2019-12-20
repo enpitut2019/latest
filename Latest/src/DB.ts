@@ -41,6 +41,7 @@ class DB{
      */
     Save_PIN(id: string, x: string, y: string, comment: string) {
         // サーバに形式を整えて送信 
+        console.log("DEBUG id = "+ id + "x = " + x);
         $.ajax({
             type: 'POST',
             url: this.urlmanage.server_url,
@@ -54,6 +55,7 @@ class DB{
                 }
             }
         }).done(function(data){
+            console.log("DEBUG: data = " + data)
             console.log("DEBUG: SaveData = {id: " + data.comment.node_id + ", x: " + data.comment.x + ", y: " + data.comment.y + ", comment: " + data.comment.comment + ", url: " + data.comment.url + "}");
         });
     }
