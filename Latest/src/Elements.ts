@@ -427,6 +427,7 @@ class CommentManager{
 
     close_all_pin(){
         var flag = true;
+        const target_node = document.getElementsByClassName("latest_button--four")
         this.all_node.forEach(n => {
             if ($('#'+n.pin_node.node.id).is(":hidden")){
                 flag = false;
@@ -437,10 +438,12 @@ class CommentManager{
                 if($("#"+n.pin_node.id).is(":visible")){
                     $("#"+n.pin_node.id).hide()
                 }
+                $(target_node).toggleClass("latest_button--six")
             }else{
                 if($("#"+n.pin_node.id).is(":hidden")){
                     $("#"+n.pin_node.id).show()
                 }
+                $(target_node).toggleClass("latest_button--six")
             }
         });
     }

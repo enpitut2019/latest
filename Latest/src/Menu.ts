@@ -13,7 +13,7 @@ class Menu_Node{
         this.body = document.createElement("div");
         this.menu_class = "latest_menubar"
         this.uni_button_class = "latest_button"
-        this.button_n_list = ["one", "two", "three", "four","five"]
+        this.button_n_list = ["one", "two", "three", "four","five", "six"]
         this.button_index = 0
         this.img_root = document.documentElement;
         this.img_count = 1
@@ -24,7 +24,7 @@ class Menu_Node{
         this.body = document.createElement("div");
         this.body.className = this.menu_class;
     }
-    
+
     make_and_append_button(set_function: ()=>void){
         let new_button = document.createElement("div");
         new_button.classList.add(this.uni_button_class);

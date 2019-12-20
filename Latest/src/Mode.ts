@@ -39,14 +39,16 @@ class Mode{
     }
 
     Change_reverse_mode(): void{
-        
+        const target_node = document.getElementsByClassName("latest_button--one");
         console.log("DEBUG: Mode: flag = " + this.flag)
 
         if(this.flag == "read"){
             this.flag = "write"
+            $(target_node).toggleClass("latest_button--five")
             this.form_unmake = false;
         }else{
             this.flag = "read"
+            $(target_node).toggleClass("latest_button--five")
         }
     }
 }

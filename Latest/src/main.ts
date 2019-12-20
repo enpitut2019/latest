@@ -34,6 +34,8 @@ window.onload = function(){
     menu.get_img("2_off.png")
     menu.get_img("3.png")
     menu.get_img("4.png")
+    menu.get_img("1_off.png")
+    menu.get_img("4_off.png")
     // メニューバーを画面に追加
     menu.appendmenubar()
 }

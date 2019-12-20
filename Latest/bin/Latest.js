@@ -356,6 +356,7 @@ class CommentManager {
     }
     close_all_pin() {
         var flag = true;
+        const target_node = document.getElementsByClassName("latest_button--four");
         this.all_node.forEach(n => {
             if ($('#' + n.pin_node.node.id).is(":hidden")) {
                 flag = false;
@@ -366,11 +367,13 @@ class CommentManager {
                 if ($("#" + n.pin_node.id).is(":visible")) {
                     $("#" + n.pin_node.id).hide();
                 }
+                $(target_node).toggleClass("latest_button--six");
             }
             else {
                 if ($("#" + n.pin_node.id).is(":hidden")) {
                     $("#" + n.pin_node.id).show();
                 }
+                $(target_node).toggleClass("latest_button--six");
             }
         });
     }
@@ -479,13 +482,16 @@ class Mode {
         }
     }
     Change_reverse_mode() {
+        const target_node = document.getElementsByClassName("latest_button--one");
         console.log("DEBUG: Mode: flag = " + this.flag);
         if (this.flag == "read") {
             this.flag = "write";
+            $(target_node).toggleClass("latest_button--five");
             this.form_unmake = false;
         }
         else {
             this.flag = "read";
+            $(target_node).toggleClass("latest_button--five");
         }
     }
 }
@@ -644,7 +650,7 @@ class Menu_Node {
         this.body = document.createElement("div");
         this.menu_class = "latest_menubar";
         this.uni_button_class = "latest_button";
-        this.button_n_list = ["one", "two", "three", "four", "five"];
+        this.button_n_list = ["one", "two", "three", "four", "five", "six"];
         this.button_index = 0;
         this.img_root = document.documentElement;
         this.img_count = 1;
@@ -722,9 +728,11 @@ window.onload = function () {
     // ノードの表示・非表示
     menu.make_and_append_button(comment_manager.close_all_pin.bind(comment_manager));
     menu.get_img("1.png");
-    menu.get_img("2.png");
+    menu.get_img("2_off.png");
     menu.get_img("3.png");
     menu.get_img("4.png");
+    menu.get_img("1_off.png");
+    menu.get_img("4_off.png");
     // メニューバーを画面に追加
     menu.appendmenubar();
 };
