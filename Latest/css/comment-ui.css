@@ -66,3 +66,15 @@
     margin: 0;
     padding: 0;
   }
+
+  .latest_comment {
+    padding: 5px;
+    margin: 5px;
+    font-weight: bold;
+    border: solid 3px #000000;
+    background-color: white;
+}
+.latest_comment p {
+    margin: 0; 
+    padding: 0;
+}

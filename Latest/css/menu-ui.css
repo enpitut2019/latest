@@ -9,9 +9,9 @@
 
 .latest_menubar{
   position: fixed;
-  top: 0;
+  top: 5px;
   right: 0;
-  width: 300px;
+  width: 220px;
   z-index: 9999999;
 }
 
