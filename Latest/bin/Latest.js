@@ -163,7 +163,7 @@ class Comment_Node extends HTML_Element {
     set_Value() {
         super.set_Value();
         // コメントのスタイルを追加。(display="none"も追加)
-        super.set_style();
+        //super.set_style()
         super.set_display("none");
         // コメントの内容を付与
         this.node.innerHTML = this.comment;
