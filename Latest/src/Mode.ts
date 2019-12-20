@@ -40,7 +40,7 @@ class Mode{
 
     Change_reverse_mode(): void{
         
-        console.log("DEBUG: Mode" + this.flag)
+        console.log("DEBUG: Mode: flag = " + this.flag)
 
         if(this.flag == "read"){
             this.flag = "write"

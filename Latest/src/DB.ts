@@ -56,6 +56,7 @@ class DB{
             }
         }).done(function(data){
             console.log("DEBUG: data = " + data)
+            console.log("DEBUG: data = " + data.comment)
             console.log("DEBUG: SaveData = {id: " + data.comment.node_id + ", x: " + data.comment.x + ", y: " + data.comment.y + ", comment: " + data.comment.comment + ", url: " + data.comment.url + "}");
         });
     }
