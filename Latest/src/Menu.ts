@@ -5,6 +5,9 @@ class Menu_Node{
     button_n_list: string[];
     button_index: number;
     uni_button_class: string;
+    img_root: HTMLElement;
+    img_count: number;
+    img_url: string;
     
     constructor(){
         this.body = document.createElement("div");
@@ -12,6 +15,9 @@ class Menu_Node{
         this.uni_button_class = "latest_button"
         this.button_n_list = ["one", "two", "three", "four","five"]
         this.button_index = 0
+        this.img_root = document.documentElement;
+        this.img_count = 1
+        this.img_url = chrome.extension.getURL('img/'); //共通するURLを取得
     }
 
     make_body(){
@@ -34,5 +40,14 @@ class Menu_Node{
 
     appendmenubar(){
         document.body.append(this.body)
+    }
+    
+    get_img(img_name: string){
+        let css_img_id = "--eyeurl" + this.img_count;
+        let target_img_url = "url(" + this.img_url + img_name + ")"
+        console.log("DEBUG: css_img_id = " + css_img_id)
+        console.log("DEBUG: url = " + target_img_url)
+        this.img_count += 1
+        this.img_root.style.setProperty(css_img_id, target_img_url);
     }
 }

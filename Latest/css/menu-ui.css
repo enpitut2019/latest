@@ -1,3 +1,10 @@
+:root {
+  --eyeurl1:url("chrome-extension://mkcabcefoaakgaoddlgjhdafhpakfgao");
+  --eyeurl2:url("chrome-extension://mkcabcefoaakgaoddlgjhdafhpakfgao");
+  --eyeurl3:url("chrome-extension://mkcabcefoaakgaoddlgjhdafhpakfgao");
+  --eyeurl4:url("chrome-extension://mkcabcefoaakgaoddlgjhdafhpakfgao");
+}
+
 .latest_menubar{
   position: fixed;
   top: 0;
@@ -37,23 +44,23 @@
   .latest_button--one {
     background-color: #1da1f3;
     border: solid 5px #1da1f3;
-    background:url("chrome-extension://bcnfaooohclifnkgpnfknbnpbmifkdli/img/eye.png");
+    background-image:var(--eyeurl1);
   }
   
   .latest_button--two {
     background: #3b75d4;
     border: solid 5px #3b75d4;
-    background:url("chrome-extension://bcnfaooohclifnkgpnfknbnpbmifkdli/img/2.png");
+    background-image:var(--eyeurl2);
   }
   
   .latest_button--three {
     background-color: #ef4d4d;
     border: solid 5px #ef4d4d;
-    background:url("chrome-extension://bcnfaooohclifnkgpnfknbnpbmifkdli/img/3.png");
+    background-image:var(--eyeurl3);
   }
   
   .latest_button--four {
     background: #7ece46;
     border: solid 5px #7ece46;
-    background:url("chrome-extension://bcnfaooohclifnkgpnfknbnpbmifkdli/img/4.png");
+    background-image:var(--eyeurl4);
   }
