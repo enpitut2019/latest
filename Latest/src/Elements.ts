@@ -6,7 +6,6 @@ class HTML_Element {
     uniid: string;
     id: string;
     node: HTMLElement;
-    z: string;
     type: string;
     element_type: string;
     url: string;
@@ -21,78 +20,25 @@ class HTML_Element {
      * @param element_type elementの属性(基本的に"div") 
      * @param click_function クリックしたときに発動する関数(指定しなくても良い)
      */
-    constructor(id: string, z: string, url: string = "", type: string = "", element_type:string = "div", class_name:string = ""){
+    constructor(id: string, url: string = "", type: string = "", element_type:string = "div", class_name:string = ""){
         // elementの作成
         this.node = document.createElement(element_type);
         this.uniid = id;
         this.id = this.make_id(id, type);
-        this.z = z;
         this.type = type;
         this.element_type = type;
         this.url = url;
         this.class = class_name;
     }
 
+    /**
+     * 各値をノードに書き込む
+     */
     set_Value(){
         // idの付与
         this.node.id = this.id
-        // z位置(重なり順を決定)
-        this.node.style.zIndex = this.z
+        // classの付与
         this.node.className = this.class
-    }
-
-    /**
-     * 指定した値分zIndex(重なり順)を追加
-     * @param add_num 加えるz値
-     */
-    add_zIndex(add_num: number){
-        let current_zIndex = this.node.style.zIndex
-        this.node.style.zIndex = String(Number(current_zIndex)+add_num)
-    }
-    
-    /**
-     * ノードにidをセットする。
-     */
-    set_style(){
-        this.node.style.padding = "10px"
-        this.node.style.marginBottom = "10px"
-        this.node.style.border = "1px solid #333333"
-        this.node.style.backgroundColor = "#ffff99"
-    }
-
-    set_buttonstyle(){// 161行目で使用
-        //丸スタイル
-        this.node.style.display = "inline-block"
-        this.node.style.textDecoration = "none"
-        this.node.style.background = "#ff8181"
-        this.node.style.color = "#FFF"
-        this.node.style.width = "15px"
-        this.node.style.height = "15px"
-        this.node.style.lineHeight = "15px"
-        this.node.style.borderRadius = "50%"
-        this.node.style.textAlign = "center"
-        this.node.style.fontWeight = "bold"
-        this.node.style.overflow = "hidden"
-        //this.node.style.boxShadow = "0px 1px 1px rgba(0,0,0,0.29)"
-        //this.node.style.borderBottom = "solid 2px #bd6565"
-        this.node.style.opacity = "0.8"
-        this.node.style.border = "solid 3px rgba(0,0,0,0.6)"
-    }
-
-    /**
-     * カーソルの表示方法を設定
-     * @param type ノード上のカーソルの表示方法を指定
-     */
-    set_cursor(type: string){
-        this.node.style.cursor = type
-    }
-
-    /**
-     * show()関数でコメントが表示できるようにdisplay属性を付与(defaultはnone)
-     * @param type ノードの表示状態を指定する
-     */
-    set_display(type: string){
-        this.node.style.display = type
     }
 
     /**
@@ -123,7 +69,7 @@ class HTML_Element {
     * @param id コメントのid
     * @param add_id 追加したいid("close"or"PIN")
     */
-   private make_id(id: string, add_id: string) :string{
+    private make_id(id: string, add_id: string) :string{
        if (add_id == ""){
            return id
         }
@@ -147,8 +93,8 @@ class PIN_Node extends HTML_Element{
      * @param y pin-nodeのy座標
      * @param z pin-nodeのz座標
      */
-    constructor(id: string, x: string, y: string, z: string, set_function: ()=>void, url :string = ""){
-        super(id, z, url, "PIN", "div", "latest_pin")
+    constructor(id: string, x: string, y: string, set_function: ()=>void, url :string = ""){
+        super(id, url, "PIN", "div", "latest_pin")
         this.x = x;
         this.y = y;
         this.set_function = set_function;
@@ -156,16 +102,15 @@ class PIN_Node extends HTML_Element{
     
     set_Value(){
         super.set_Value()
+        
         // 位置を付与(absolute)
         this.Set_Position_absolute(this.x, this.y)
-        //// 表示する言葉(将来的には画像)
-        //super.set_Image()
-        // 見た目の設定
-        //super.set_buttonstyle()
-        super.set_cursor("pointer")
+
         // クリックしたときのアクションをセット
         super.set_Function(this.set_function)
-        super.set_display("")
+        
+        // 表示する言葉(将来的には画像)
+        // super.set_Image()
     }
 
     /**
@@ -186,24 +131,17 @@ class PIN_Node extends HTML_Element{
 class Comment_Node extends HTML_Element{
 
     comment: string;
-    add_zindex: number;
 
-    constructor(id: string, z: string, comment: string, url :string = ""){
-        super(id, z, "", "", "div", "latest_comment")
+    constructor(id: string, comment: string, url :string = ""){
+        super(id, "", "", "div", "latest_comment")
         this.comment = comment;
-        this.add_zindex = 1;
     }
 
     set_Value(){
         super.set_Value()
-        // コメントのスタイルを追加。(display="none"も追加)
-        //super.set_style()
-        super.set_display("none")
+        
         // コメントの内容を付与
         this.node.innerHTML = this.comment
-        // zIndexを追加
-        super.add_zIndex(this.add_zindex)
-        this.node.style.color = "black"
     }
 }
 
@@ -212,25 +150,17 @@ class Comment_Node extends HTML_Element{
  */
 class Close_Node extends HTML_Element{
 
-    add_zindex: number;
     set_function: ()=>void;
 
-    constructor(id: string, z: string, set_function: ()=>void, url :string = ""){
-        super(id, z, "", "close", "div", "latest_close")
-        this.add_zindex = 2
+    constructor(id: string, set_function: ()=>void, url :string = ""){
+        super(id, "", "close", "div", "latest_close")
         this.set_function = set_function
     }
 
     set_Value(){
         super.set_Value()
-        // コメントのスタイルを追加。(display="none"も追加)
-        //super.set_style()
-        super.set_cursor("pointer")
-        super.set_display("none")
         // 表示する言葉(将来的には画像)
         super.set_Image("x")
-        // zIndexを追加
-        super.add_zIndex(this.add_zindex)
         // このノードをクリックしたときに発火する関数を指定
         super.set_Function(this.set_function)        
     }
@@ -256,9 +186,9 @@ class Comments{
      * @param comment commentノードに表示するコメント内容
      */
     constructor(id: string, x: string, y: string, z: string = "1000", comment: string, url: string = ""){
-        this.comment_node = new Comment_Node(id, z, comment, url)
-        this.cls_node = new Close_Node(id, z, this.close_comment.bind(this), url)
-        this.pin_node = new PIN_Node(id, x, y, z,  this.Display_Comment.bind(this), url)
+        this.comment_node = new Comment_Node(id, comment, url)
+        this.cls_node = new Close_Node(id, this.close_comment.bind(this), url)
+        this.pin_node = new PIN_Node(id, x, y, this.Display_Comment.bind(this), url)
         this.id = id;
         this.x = x;
         this.y = y;
