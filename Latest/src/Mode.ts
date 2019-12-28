@@ -1,10 +1,10 @@
 class Mode{
     flag: string;
-    form_unmake: boolean;
+    writing: boolean;
 
     constructor(){
         this.flag = "read";
-        this.form_unmake = true;
+        this.writing = false;
     }
 
     /**
@@ -30,22 +30,24 @@ class Mode{
         }
     }
 
-    Change_unmake(){
-        if(this.form_unmake){
-            this.form_unmake = false;
+    Writing_mode(){
+        if(this.writing){
+            this.writing = false;
         }else{
-            this.form_unmake = true;
+            this.writing = true;
         }
     }
 
     Change_reverse_mode(): void{
+        if (this.writing){
+            return;
+        }
         const target_node = document.getElementsByClassName("latest_button--one");
         console.log("DEBUG: Mode: flag = " + this.flag)
 
         if(this.flag == "read"){
             this.flag = "write"
             $(target_node).toggleClass("latest_button--five")
-            this.form_unmake = false;
         }else{
             this.flag = "read"
             $(target_node).toggleClass("latest_button--five")

@@ -383,7 +383,7 @@ class DB {
 class Mode {
     constructor() {
         this.flag = "read";
-        this.form_unmake = true;
+        this.writing = false;
     }
     /**
      * 状態を変更するための関数
@@ -407,21 +407,23 @@ class Mode {
             return false;
         }
     }
-    Change_unmake() {
-        if (this.form_unmake) {
-            this.form_unmake = false;
+    Writing_mode() {
+        if (this.writing) {
+            this.writing = false;
         }
         else {
-            this.form_unmake = true;
+            this.writing = true;
         }
     }
     Change_reverse_mode() {
+        if (this.writing) {
+            return;
+        }
         const target_node = document.getElementsByClassName("latest_button--one");
         console.log("DEBUG: Mode: flag = " + this.flag);
         if (this.flag == "read") {
             this.flag = "write";
             $(target_node).toggleClass("latest_button--five");
-            this.form_unmake = false;
         }
         else {
             this.flag = "read";
@@ -450,105 +452,81 @@ class ManageID {
 }
 class Form {
     constructor() {
-        this.form_div = "latest_div";
+        this.form_id = "latest_form";
     }
     /**
      * formを作る関数
      * @param comment_manager mainにあるcomment_manager(コメントを新しく作るため)
      * @param e クリックした場所の座標をjqueryより取得
      */
-    make_form(comment_manager, e) {
-        // 書き込みモードを解除        
-        this.init_form();
+    make_form() {
         //ポップアップとして表示するもの全体のdivを用意
-        let latest_div = document.createElement("div");
-        latest_div.id = "latest_div";
-        latest_div.style.backgroundColor = "#e6e6fa";
-        latest_div.style.zIndex = "1000000";
-        document.body.appendChild(latest_div);
+        this.form = document.createElement("div");
+        this.form.id = this.form_id;
         // table作成
-        let latest_table = document.createElement("table");
-        latest_table.id = "latest_table";
-        latest_div.appendChild(latest_table);
-        //tableのbody作成
-        let latest_tbody = document.createElement("tbody");
-        latest_tbody.id = "latest_tbody";
-        latest_table.appendChild(latest_tbody);
-        let inputs = this.make_table(["ユーザーネーム", "コメント"], latest_tbody);
+        const latest_table = document.createElement("table");
+        this.user_name_form = this.make_table_input("ユーザーネーム", latest_table);
+        this.comment_form = this.make_table_textarea("コメント", latest_table);
+        this.form.appendChild(latest_table);
+    }
+    /**
+     * ダイアログを開くための関数
+     */
+    open(x, y, comment_manager, mode) {
+        const user_name = this.user_name_form;
+        const comment = this.comment_form;
         //ポップアップの呼び出し。
-        $('#' + latest_div.id).dialog({
-            dialogClass: "wkDialogClass",
+        $(this.form).dialog({
             title: 'コメント入力フォーム',
             width: "400",
             height: "auto",
-            closeText: "閉じる",
             modal: true,
             buttons: {
                 "登録": function () {
-                    let tmp_user = "";
-                    let tmp_comment = "";
-                    tmp_user = inputs[0].value;
-                    tmp_comment = inputs[1].value;
+                    const tmp_user = user_name.value;
+                    const tmp_comment = comment.value;
                     console.log("ユーザーネーム: " + tmp_user + "   コメント: " + tmp_comment);
                     // コメントを作成
-                    comment_manager.creteNewComments(String(e.pageX), String(e.pageY), "1000", tmp_comment);
+                    comment_manager.creteNewComments(x, y, "1000", tmp_comment);
                     $(this).dialog('close');
-                    $("#latest_div").remove();
                 }
             },
+            open: function () {
+                mode.Writing_mode();
+            },
             close: function () {
-                mode.Change_mode("write");
+                user_name.value = "";
+                comment.value = "";
+                mode.Writing_mode();
             }
         });
     }
-    init_form() {
-        //ノードの初期化
-        if (document.getElementById(this.form_div) != null) {
-            $("#" + this.form_div).remove();
-        }
-    }
-    make_table(line_name, tbody) {
-        var ret = [];
-        line_name.forEach(function (name) {
-            ret.push(this.make_table_n(name, tbody, ret.length));
-        }.bind(this));
-        return ret;
-    }
-    make_table_n(line_name, tbody, line_n) {
-        //table n行目作成
-        let tr = tbody.insertRow(-1);
-        tr.id = "latest_tr" + line_n;
-        //tabel n行目のheader作成。
-        let th = document.createElement("th");
-        th.id = "latest_th" + line_n;
-        th.textContent = line_name;
-        tr.appendChild(th);
+    /**
+     * テーブルにinputフォームを追加してそれを返す。
+     * @param line_name フォームの名前を指定
+     * @param table 追加したいテーブルを指定
+     */
+    make_table_input(line_name, table) {
+        //table 1行作成
+        const row = table.insertRow(-1);
+        //table 作った1行の1列目を追加(フォームの名前)
+        row.insertCell(-1).appendChild(document.createTextNode(line_name));
+        ;
         //tabel n行目の値を作成。
-        let td = document.createElement("td");
-        td.id = "latest_td" + line_n;
-        let input = document.createElement("input");
-        input.id = "input" + line_n;
-        td = input;
-        tr.appendChild(td);
+        const input = document.createElement("input");
+        row.appendChild(input);
         return input;
     }
-    make_table_n_textarea(line_name, tbody, line_n) {
-        //table n行目作成
-        let tr = tbody.insertRow(-1);
-        tr.id = "latest_tr" + line_n;
-        //tabel n行目のheader作成。
-        let th = document.createElement("th");
-        th.id = "latest_th" + line_n;
-        th.textContent = line_name;
-        tr.appendChild(th);
+    make_table_textarea(line_name, table) {
+        //table 1行作成
+        const row = table.insertRow(-1);
+        //table 作った1行の1列目を追加(フォームの名前)
+        row.insertCell(-1).appendChild(document.createTextNode(line_name));
+        ;
         //tabel n行目の値を作成。
-        let td = document.createElement("td");
-        td.id = "latest_td" + line_n;
-        let input = document.createElement("input");
-        input.id = "input" + line_n;
-        td = input;
-        tr.appendChild(td);
-        return input;
+        const textarea = document.createElement("textarea");
+        row.appendChild(textarea);
+        return textarea;
     }
 }
 class URLManage {
@@ -642,15 +620,17 @@ class Debug {
 /// <reference path = "Menu.ts" />
 /// <reference path = "Debug.ts" />
 // 変数を宣言
-let mode = new Mode();
-let comment_manager = new CommentManager();
-let debug = new Debug();
-let form = new Form();
-let menu = new Menu_Node();
+const mode = new Mode();
+const comment_manager = new CommentManager();
+const debug = new Debug();
+const form = new Form();
+const menu = new Menu_Node();
 // サイトを読み込んだときに実行
 window.onload = function () {
     // コメントの読み込み
     comment_manager.loadComment();
+    // フォームの作成
+    form.make_form();
     // メニューバーを作成する。
     menu.make_body();
     // 読み書き
@@ -680,14 +660,20 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 $("body").on("click", function (e) {
     console.log("DEBUG: mode = " + mode.flag);
+    // メニューバーをクリックしたときには無効化
+    const click_class = e.target.className;
+    if (click_class) {
+        console.log("DEBUG: Main: Click_class = " + click_class);
+    }
+    if (click_class.includes("latest_button")) {
+        console.log("DEBUG: You click menubar");
+        return;
+    }
     // 書き込みモードならPIN・コメントを作成
     if (mode.Judge_mode("write")) {
-        // フォームを閉じる際にもう一度開かないようにするための対策
-        if (mode.form_unmake) {
-            // 書き込み中にフォームを再度作らないように制御
-            mode.Change_mode("read");
-            form.make_form(comment_manager, e);
-        }
-        mode.Change_unmake();
+        console.log("DEBUG: WriteStart");
+        // 書き込み中にフォームを再度作らないように制御
+        mode.Change_reverse_mode();
+        form.open(String(e.pageX), String(e.pageY), comment_manager, mode);
     }
 });
