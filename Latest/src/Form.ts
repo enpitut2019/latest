@@ -42,15 +42,15 @@ class Form{
             height: "auto",
             modal: true,
             buttons: {
-                        "登録": function(){
-                            const tmp_user: string = user_name.value;
-                            const tmp_comment: string = comment.value;
-                            console.log("ユーザーネーム: "+tmp_user+"   コメント: "+tmp_comment);
-                            // コメントを作成
-                            comment_manager.creteNewComments(x, y, "1000", tmp_comment)
-                            $(this).dialog('close');
-                        }
-                    },
+                "登録": function(){
+                    const tmp_user: string = user_name.value;
+                    const tmp_comment: string = comment.value;
+                    console.log("ユーザーネーム: "+tmp_user+"   コメント: "+tmp_comment);
+                    // コメントを作成
+                    comment_manager.creteNewComments(x, y, "1000", tmp_comment)
+                    $(this).dialog('close');
+                }
+            },
             open: function(){
                 mode.Writing_mode()
             },
