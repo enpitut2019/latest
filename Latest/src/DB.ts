@@ -1,21 +1,17 @@
 class DB{
-
-    urlmanage: URLManage;
-    
     /**
      * 何かしらdbに接続するためのステータスをセットする
      */
     constructor(){
-        this.urlmanage = new URLManage()
     }
 
     /**
      * サーバーから情報を読み込む
     */
-    Load_Comment() :Promise<Array<{}>>{
-        let server_url = this.urlmanage.get_url_get_from_url();
+    Load_Comment(urlmanage: URLManage) :Promise<Array<{}>>{
+        let server_url = urlmanage.get_url_get_from_url();
         var info = [{}]
-        var parameter = {url: this.urlmanage.current_url, sharenum: this.urlmanage.getParam("ShareNum")}
+        var parameter = {url: urlmanage.current_url, sharenum: urlmanage.sharenum}
         return new Promise(function (resolve) {
             $.ajax({
                 type: 'GET',
@@ -39,19 +35,19 @@ class DB{
      * @param y PINのy座標
      * @param comment コメントの内容
      */
-    Save_PIN(id: string, x: string, y: string, comment: string) {
+    Save_PIN(id: string, x: string, y: string, comment: string, urlmanage: URLManage) {
         // サーバに形式を整えて送信 
         console.log("DEBUG id = "+ id + "x = " + x);
         $.ajax({
             type: 'POST',
-            url: this.urlmanage.server_url,
+            url: urlmanage.server_url,
             data: {
                 comment: {
                     node_id: id,
                     x: x,
                     y: y,
                     comment: comment,
-                    url: this.urlmanage.current_url
+                    url: urlmanage.current_url
                 }
             }
         }).done(function(data){

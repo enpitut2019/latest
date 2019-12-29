@@ -14,11 +14,13 @@ const comment_manager = new CommentManager()
 const debug = new Debug()
 const form = new Form()
 const menu = new Menu_Node()
+const urlmanage = new URLManage()
 
 // サイトを読み込んだときに実行
 window.onload = function(){
+    urlmanage.getParam("sharenum")
     // コメントの読み込み
-    comment_manager.loadComment()
+    comment_manager.loadComment(urlmanage)
 
     // フォームの作成
     form.make_form()

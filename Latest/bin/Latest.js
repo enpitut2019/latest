@@ -335,7 +335,7 @@ class DB {
     Load_Comment() {
         let server_url = this.urlmanage.get_url_get_from_url();
         var info = [{}];
-        var parameter = { url: this.urlmanage.current_url, sharenum: this.urlmanage.getParam("ShareNum") };
+        var parameter = { url: this.urlmanage.current_url, sharenum: this.urlmanage.getParam("sharenum") };
         return new Promise(function (resolve) {
             $.ajax({
                 type: 'GET',
@@ -543,7 +543,8 @@ class URLManage {
      * Get the URL parameter value(from https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript)
      *
      * @param  name {string} パラメータのキー文字列
-     * @return url {url} 対象のURL文字列（任意）
+     * @param  url {url} 対象のURL文字列（任意）
+     * @return パラメーターの値
      */
     getParam(name, url = "") {
         if (url == "")

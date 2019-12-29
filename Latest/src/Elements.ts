@@ -321,7 +321,7 @@ class CommentManager{
     /**
      * 新しいノードをサイトに追加した後、データベースに追加する
      */
-    creteNewComments(x: string, y: string, z: string = "1000", comment: string){
+    creteNewComments(x: string, y: string, z: string = "1000", comment: string, urlmanage: URLManage){
         let id = this.manageid.get_Random_id()
         let [relative_x, relative_y] = this.Change_from_abs_to_rel(Number(x), Number(y));
         console.log("DEBUG: relative_x = "+relative_x + ", relative_y = " + relative_y)
@@ -329,17 +329,17 @@ class CommentManager{
         node.createComments()
         node.appendComments()
         node.set_CurrentURL()
-        this.db.Save_PIN(id, String(relative_x), String(relative_y), comment)
+        this.db.Save_PIN(id, String(relative_x), String(relative_y), comment, urlmanage)
     }
 
     /*
     サーバーから情報を読み込む
     読み込んだ内容を１つずつ取り出してCreate_PIN()にいれる。
     */
-    loadComment(){
+    loadComment(urlmanage: URLManage){
         let createComments = this.createComments.bind(this)
         let changefromreltoabs = this.Change_from_rel_to_abs.bind(this)
-        this.db.Load_Comment()
+        this.db.Load_Comment(urlmanage)
         .then(function(e: Array<any>) {
             e.forEach(e => {
                 let [absolute_x, absolute_y] = changefromreltoabs(Number(e.x), Number(e.y));
