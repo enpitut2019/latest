@@ -19,6 +19,7 @@ class Share{
         this.urlmanage.sharenum = this.make_share_num()
         this.current_sharenum = this.urlmanage.sharenum
         this.comment_manager.remove_pin()
+        this.Result_Init_Share(this.make_share_url(this.urlmanage.current_url, this.current_sharenum))
     }
 
     make_share_num():string{
@@ -50,5 +51,56 @@ class Share{
     Change_Share_img(){
         const target_node = document.getElementsByClassName("latest_button--three")
         $(target_node).toggleClass("latest_button--seven")
+    }
+
+    private make_share_url(current_url: string, share_num: string):string{
+        let para = "sharenum=" + share_num
+        console.log("DEBUG: location.search = "+ location.search)
+        if (location.search != ""){
+            para = '&' + para;
+        }else{
+            para = '?' + para
+        }
+        return current_url + para;
+    }
+
+    private Result_Init_Share(url: string){
+        //ポップアップとして表示するもの全体のdivを用意
+        const form = document.createElement("div");
+        form.id = "latest_result_share"
+        form.style.textAlign = "center"
+
+        const title = document.createElement("h1")
+        title.innerHTML = "共有URLはこちら"
+        form.appendChild(title)
+
+        const context = document.createElement("input")
+        context.id = "latest_share_url"
+        context.type = "text"
+        context.value = url
+        context.readOnly = true
+        context.width = 400
+        context.size = 40
+        context.style.textAlign = "center"
+        context.select();
+
+        form.appendChild(context);
+
+        //ポップアップの呼び出し。
+        $(form).dialog({
+            title: '共有URL',
+            width: "400",
+            height: "auto",
+            modal: true,
+            buttons: {
+                "URLをコピーする": function(){
+                    $(context).select()
+                    document.execCommand("Copy")
+                    const result = document.createElement("div")
+                    result.innerHTML = "コピーできました!"
+                    form.appendChild(result)
+                }
+            }
+        });
     }
 }

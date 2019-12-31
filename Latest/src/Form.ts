@@ -11,8 +11,6 @@ class Form{
 
     /**
      * formを作る関数
-     * @param comment_manager mainにあるcomment_manager(コメントを新しく作るため)
-     * @param e クリックした場所の座標をjqueryより取得
      */
     make_form(){
         //ポップアップとして表示するもの全体のdivを用意
