@@ -48,6 +48,7 @@
   display: none;
   color: black;
   cursor: pointer;
+  z-index: 1001;
 }
 
 .latest_comment p {

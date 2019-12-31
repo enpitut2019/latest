@@ -32,4 +32,11 @@ class URLManage {
         if (!results[2]) return;
         this.sharenum = decodeURIComponent(results[2].replace(/\+/g, " "));
     }
+
+    get_href(){
+        const sharenum = "sharenum"
+        var regex = new RegExp("[?&]" + sharenum + "(=([^&#]*)|&|#|$)")
+        this.current_url = this.current_url.replace(regex, "")
+        console.log("DEBUG GET_HREF: current_url2 = " + this.current_url)
+    }
 }

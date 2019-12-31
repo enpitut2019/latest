@@ -5,6 +5,7 @@
   --eyeurl4:url("chrome-extension://mkcabcefoaakgaoddlgjhdafhpakfgao");
   --eyeurl5:url("chrome-extension://mkcabcefoaakgaoddlgjhdafhpakfgao");
   --eyeurl6:url("chrome-extension://mkcabcefoaakgaoddlgjhdafhpakfgao");
+  --eyeurl7:url("chrome-extension://mkcabcefoaakgaoddlgjhdafhpakfgao");
 }
 
 .latest_menubar{
@@ -12,7 +13,7 @@
   top: 5px;
   right: 0;
   width: 220px;
-  z-index: 9999999;
+  z-index: 1001;
 }
 
 .latest_button{
@@ -64,6 +65,12 @@
     background-color: #ef4d4d;
     border: solid 5px #ef4d4d;
     background-image:var(--eyeurl3);
+  }
+
+  .latest_button--seven {
+    background-color: #ef4d4d;
+    border: solid 5px #ef4d4d;
+    background-image:var(--eyeurl7);
   }
   
   .latest_button--four {

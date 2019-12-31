@@ -274,6 +274,14 @@ class Comments{
         }
     }
 
+    remove_comment(){
+        if ($('#'+this.comment_node.id).length){
+            $('#'+this.comment_node.id).remove()
+            $('#'+this.cls_node.id).remove()
+            $('#'+this.pin_node.id).remove()
+        }
+    }
+
     /**
      * 対象となるノードの座標を変更する。
      * @param x 対象のx座標
@@ -330,6 +338,7 @@ class CommentManager{
         node.appendComments()
         node.set_CurrentURL()
         this.db.Save_PIN(id, String(relative_x), String(relative_y), comment, urlmanage)
+        this.all_node.push(node)
     }
 
     /*
@@ -388,5 +397,12 @@ class CommentManager{
         let abs_x = rel_x * document.body.clientWidth;
         let abs_y = rel_y * document.body.clientHeight;
         return [abs_x, abs_y];
+    }
+
+    remove_pin(){
+        while (this.all_node.length > 0) {
+            let n = this.all_node.pop()
+            n.remove_comment()
+        }
     }
 }

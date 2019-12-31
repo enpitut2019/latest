@@ -218,6 +218,13 @@ class Comments {
             $("#" + this.comment_node.id).hide();
         }
     }
+    remove_comment() {
+        if ($('#' + this.comment_node.id).length) {
+            $('#' + this.comment_node.id).remove();
+            $('#' + this.cls_node.id).remove();
+            $('#' + this.pin_node.id).remove();
+        }
+    }
     /**
      * 対象となるノードの座標を変更する。
      * @param x 対象のx座標
@@ -257,7 +264,7 @@ class CommentManager {
     /**
      * 新しいノードをサイトに追加した後、データベースに追加する
      */
-    creteNewComments(x, y, z = "1000", comment) {
+    creteNewComments(x, y, z = "1000", comment, urlmanage) {
         let id = this.manageid.get_Random_id();
         let [relative_x, relative_y] = this.Change_from_abs_to_rel(Number(x), Number(y));
         console.log("DEBUG: relative_x = " + relative_x + ", relative_y = " + relative_y);
@@ -265,16 +272,17 @@ class CommentManager {
         node.createComments();
         node.appendComments();
         node.set_CurrentURL();
-        this.db.Save_PIN(id, String(relative_x), String(relative_y), comment);
+        this.db.Save_PIN(id, String(relative_x), String(relative_y), comment, urlmanage);
+        this.all_node.push(node);
     }
     /*
     サーバーから情報を読み込む
     読み込んだ内容を１つずつ取り出してCreate_PIN()にいれる。
     */
-    loadComment() {
+    loadComment(urlmanage) {
         let createComments = this.createComments.bind(this);
         let changefromreltoabs = this.Change_from_rel_to_abs.bind(this);
-        this.db.Load_Comment()
+        this.db.Load_Comment(urlmanage)
             .then(function (e) {
             e.forEach(e => {
                 let [absolute_x, absolute_y] = changefromreltoabs(Number(e.x), Number(e.y));
@@ -321,21 +329,26 @@ class CommentManager {
         let abs_y = rel_y * document.body.clientHeight;
         return [abs_x, abs_y];
     }
+    remove_pin() {
+        while (this.all_node.length > 0) {
+            let n = this.all_node.pop();
+            n.remove_comment();
+        }
+    }
 }
 class DB {
     /**
      * 何かしらdbに接続するためのステータスをセットする
      */
     constructor() {
-        this.urlmanage = new URLManage();
     }
     /**
      * サーバーから情報を読み込む
     */
-    Load_Comment() {
-        let server_url = this.urlmanage.get_url_get_from_url();
+    Load_Comment(urlmanage) {
+        let server_url = urlmanage.get_url_get_from_url();
         var info = [{}];
-        var parameter = { url: this.urlmanage.current_url, sharenum: this.urlmanage.getParam("sharenum") };
+        var parameter = { url: urlmanage.current_url, sharenum: urlmanage.sharenum };
         return new Promise(function (resolve) {
             $.ajax({
                 type: 'GET',
@@ -358,20 +371,34 @@ class DB {
      * @param y PINのy座標
      * @param comment コメントの内容
      */
-    Save_PIN(id, x, y, comment) {
+    Save_PIN(id, x, y, comment, urlmanage) {
         // サーバに形式を整えて送信 
         console.log("DEBUG id = " + id + "x = " + x);
+        let comments = {};
+        if (urlmanage.sharenum != null) {
+            comments = {
+                node_id: id,
+                x: x,
+                y: y,
+                comment: comment,
+                url: urlmanage.current_url,
+                sharenum: urlmanage.sharenum
+            };
+        }
+        else {
+            comments = {
+                node_id: id,
+                x: x,
+                y: y,
+                comment: comment,
+                url: urlmanage.current_url
+            };
+        }
         $.ajax({
             type: 'POST',
-            url: this.urlmanage.server_url,
+            url: urlmanage.server_url,
             data: {
-                comment: {
-                    node_id: id,
-                    x: x,
-                    y: y,
-                    comment: comment,
-                    url: this.urlmanage.current_url
-                }
+                comment: comments
             }
         }).done(function (data) {
             console.log("DEBUG: data = " + data);
@@ -472,7 +499,7 @@ class Form {
     /**
      * ダイアログを開くための関数
      */
-    open(x, y, comment_manager, mode) {
+    open(x, y, comment_manager, mode, urlmanage) {
         const user_name = this.user_name_form;
         const comment = this.comment_form;
         //ポップアップの呼び出し。
@@ -485,9 +512,9 @@ class Form {
                 "登録": function () {
                     const tmp_user = user_name.value;
                     const tmp_comment = comment.value;
-                    console.log("ユーザーネーム: " + tmp_user + "   コメント: " + tmp_comment);
+                    console.log("ユーザーネーム: " + tmp_user + "   コメント: " + tmp_comment + "   ShareNum: " + urlmanage.sharenum);
                     // コメントを作成
-                    comment_manager.creteNewComments(x, y, "1000", tmp_comment);
+                    comment_manager.creteNewComments(x, y, "1000", tmp_comment, urlmanage);
                     $(this).dialog('close');
                 }
             },
@@ -533,6 +560,7 @@ class URLManage {
     constructor() {
         this.current_url = location.href;
         this.server_url = "https://stark-coast-28712.herokuapp.com/comments";
+        this.sharenum = null;
         console.log("DEBUG: current_url = " + this.current_url);
     }
     get_url_get_from_url() {
@@ -552,10 +580,16 @@ class URLManage {
         name = name.replace(/[\[\]]/g, "\\$&");
         var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"), results = regex.exec(url);
         if (!results)
-            return null;
+            return;
         if (!results[2])
-            return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
+            return;
+        this.sharenum = decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    get_href() {
+        const sharenum = "sharenum";
+        var regex = new RegExp("[?&]" + sharenum + "(=([^&#]*)|&|#|$)");
+        this.current_url = this.current_url.replace(regex, "");
+        console.log("DEBUG GET_HREF: current_url2 = " + this.current_url);
     }
 }
 class Menu_Node {
@@ -563,7 +597,7 @@ class Menu_Node {
         this.body = document.createElement("div");
         this.menu_class = "latest_menubar";
         this.uni_button_class = "latest_button";
-        this.button_n_list = ["one", "two", "three", "four", "five", "six"];
+        this.button_n_list = ["one", "two", "three", "four", "five", "six", "seven"];
         this.button_index = 0;
         this.img_root = document.documentElement;
         this.img_count = 1;
@@ -596,6 +630,52 @@ class Menu_Node {
         this.img_root.style.setProperty(css_img_id, target_img_url);
     }
 }
+class Share {
+    constructor(urlmanage, comment_manager) {
+        this.urlmanage = urlmanage;
+        this.comment_manager = comment_manager;
+        this.current_sharenum = urlmanage.sharenum;
+    }
+    get_Sharenum() {
+        this.urlmanage.getParam("sharenum");
+        this.current_sharenum = this.urlmanage.sharenum;
+    }
+    Init_Share() {
+        this.urlmanage.sharenum = this.make_share_num();
+        this.current_sharenum = this.urlmanage.sharenum;
+        this.comment_manager.remove_pin();
+    }
+    make_share_num() {
+        const max_sharenum = 10000;
+        const min_sharenum = 0;
+        let min = Math.ceil(min_sharenum);
+        let max = Math.floor(max_sharenum);
+        let num = Math.floor(Math.random() * (max - min)) + min;
+        return String(num);
+    }
+    Change_Share() {
+        this.Change_Share_img();
+        if (this.current_sharenum == null) {
+            this.Init_Share();
+        }
+        else {
+            this.comment_manager.remove_pin();
+            if (this.urlmanage.sharenum == null) {
+                // 共有状態off->on
+                this.urlmanage.sharenum = this.current_sharenum;
+            }
+            else {
+                // 共有状態on->off
+                this.urlmanage.sharenum = null;
+            }
+            this.comment_manager.loadComment(this.urlmanage);
+        }
+    }
+    Change_Share_img() {
+        const target_node = document.getElementsByClassName("latest_button--three");
+        $(target_node).toggleClass("latest_button--seven");
+    }
+}
 class Debug {
     constructor() {
     }
@@ -619,6 +699,7 @@ class Debug {
 /// <reference path = "Form.ts" />
 /// <reference path = "URL.ts" />
 /// <reference path = "Menu.ts" />
+/// <reference path = "Share.ts" />
 /// <reference path = "Debug.ts" />
 // 変数を宣言
 const mode = new Mode();
@@ -626,10 +707,14 @@ const comment_manager = new CommentManager();
 const debug = new Debug();
 const form = new Form();
 const menu = new Menu_Node();
+const urlmanage = new URLManage();
+const share = new Share(urlmanage, comment_manager);
 // サイトを読み込んだときに実行
 window.onload = function () {
+    share.get_Sharenum();
+    urlmanage.get_href();
     // コメントの読み込み
-    comment_manager.loadComment();
+    comment_manager.loadComment(urlmanage);
     // フォームの作成
     form.make_form();
     // メニューバーを作成する。
@@ -639,7 +724,7 @@ window.onload = function () {
     // 全ノードの表示・非表示
     menu.make_and_append_button(comment_manager.close_all_Comment.bind(comment_manager));
     // 共有範囲指定
-    menu.make_and_append_button(function () { });
+    menu.make_and_append_button(share.Change_Share.bind(share));
     // ノードの表示・非表示
     menu.make_and_append_button(comment_manager.close_all_pin.bind(comment_manager));
     menu.get_img("1.png");
@@ -648,8 +733,12 @@ window.onload = function () {
     menu.get_img("4.png");
     menu.get_img("1_off.png");
     menu.get_img("4_off.png");
+    menu.get_img("3_off.png");
     // メニューバーを画面に追加
     menu.appendmenubar();
+    if (share.current_sharenum == null) {
+        share.Change_Share_img();
+    }
 };
 //background.jsから送られたメッセージで機能を変更する
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -675,6 +764,6 @@ $("body").on("click", function (e) {
         console.log("DEBUG: WriteStart");
         // 書き込み中にフォームを再度作らないように制御
         mode.Change_reverse_mode();
-        form.open(String(e.pageX), String(e.pageY), comment_manager, mode);
+        form.open(String(e.pageX), String(e.pageY), comment_manager, mode, urlmanage);
     }
 });

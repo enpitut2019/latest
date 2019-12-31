@@ -6,6 +6,7 @@
 /// <reference path = "Form.ts" />
 /// <reference path = "URL.ts" />
 /// <reference path = "Menu.ts" />
+/// <reference path = "Share.ts" />
 /// <reference path = "Debug.ts" />
 
 // 変数を宣言
@@ -15,10 +16,12 @@ const debug = new Debug()
 const form = new Form()
 const menu = new Menu_Node()
 const urlmanage = new URLManage()
+const share = new Share(urlmanage, comment_manager)
 
 // サイトを読み込んだときに実行
 window.onload = function(){
-    urlmanage.getParam("sharenum")
+    share.get_Sharenum()
+    urlmanage.get_href()
     // コメントの読み込み
     comment_manager.loadComment(urlmanage)
 
@@ -32,7 +35,7 @@ window.onload = function(){
     // 全ノードの表示・非表示
     menu.make_and_append_button(comment_manager.close_all_Comment.bind(comment_manager))
     // 共有範囲指定
-    menu.make_and_append_button(function(){})
+    menu.make_and_append_button(share.Change_Share.bind(share))
     // ノードの表示・非表示
     menu.make_and_append_button(comment_manager.close_all_pin.bind(comment_manager))
     menu.get_img("1.png")
@@ -41,8 +44,12 @@ window.onload = function(){
     menu.get_img("4.png")
     menu.get_img("1_off.png")
     menu.get_img("4_off.png")
+    menu.get_img("3_off.png")
     // メニューバーを画面に追加
     menu.appendmenubar()
+    if (share.current_sharenum == null){
+        share.Change_Share_img()
+    }
 }
 
 //background.jsから送られたメッセージで機能を変更する
@@ -70,7 +77,7 @@ $("body").on("click", function(e){
         console.log("DEBUG: WriteStart");
         // 書き込み中にフォームを再度作らないように制御
         mode.Change_reverse_mode()
-        form.open(String(e.pageX), String(e.pageY), comment_manager, mode);
+        form.open(String(e.pageX), String(e.pageY), comment_manager, mode, urlmanage);
     }
 });
 

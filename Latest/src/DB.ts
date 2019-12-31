@@ -38,17 +38,30 @@ class DB{
     Save_PIN(id: string, x: string, y: string, comment: string, urlmanage: URLManage) {
         // サーバに形式を整えて送信 
         console.log("DEBUG id = "+ id + "x = " + x);
+        let comments = {};
+        if (urlmanage.sharenum != null){
+            comments = {
+                node_id: id,
+                x: x,
+                y: y,
+                comment: comment,
+                url: urlmanage.current_url,
+                sharenum: urlmanage.sharenum
+            }
+        }else{
+            comments = {
+                node_id: id,
+                x: x,
+                y: y,
+                comment: comment,
+                url: urlmanage.current_url
+            }
+        }
         $.ajax({
             type: 'POST',
             url: urlmanage.server_url,
             data: {
-                comment: {
-                    node_id: id,
-                    x: x,
-                    y: y,
-                    comment: comment,
-                    url: urlmanage.current_url
-                }
+                comment: comments
             }
         }).done(function(data){
             console.log("DEBUG: data = " + data)

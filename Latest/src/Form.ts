@@ -32,7 +32,7 @@ class Form{
     /**
      * ダイアログを開くための関数
      */
-    open(x: string, y: string, comment_manager: CommentManager, mode: Mode){
+    open(x: string, y: string, comment_manager: CommentManager, mode: Mode, urlmanage: URLManage){
         const user_name = this.user_name_form
         const comment = this.comment_form
         //ポップアップの呼び出し。
@@ -45,9 +45,9 @@ class Form{
                 "登録": function(){
                     const tmp_user: string = user_name.value;
                     const tmp_comment: string = comment.value;
-                    console.log("ユーザーネーム: "+tmp_user+"   コメント: "+tmp_comment);
+                    console.log("ユーザーネーム: "+tmp_user+"   コメント: "+tmp_comment + "   ShareNum: "+urlmanage.sharenum);
                     // コメントを作成
-                    comment_manager.creteNewComments(x, y, "1000", tmp_comment)
+                    comment_manager.creteNewComments(x, y, "1000", tmp_comment, urlmanage)
                     $(this).dialog('close');
                 }
             },
