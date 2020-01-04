@@ -13,15 +13,13 @@
 
 ### インストールと拡張機能読み込み方法
 
-1. このページにあるlatest.をダウンロードする。
+1. このページにある[Latest-Release/latest.](https://github.com/enpitut2019/latest/tree/master/ForRelease/Latest-Release)をダウンロードする。(latest.のリンクからファイルをダウンロードしてもらえると助かります。)
 
-2. ダウンロードしたlatest.zipを展開する。
+2. [Chromeの拡張機能読み込みページ](chrome://extensions/)を開き、左上の「パッケージ化されていない拡張機能を読み込む」をクリックする。
 
-3. [Chromeの拡張機能読み込みページ](chrome://extensions/)を開き、左上の「パッケージ化されていない拡張機能を読み込む」をクリックする。
+3. ダウンロードしたlatest.があるディレクトリ化まで指定>選択
 
-4. ダウンロードしたlatest.があるディレクトリ化まで指定>選択
-
-5. latest.が使えるようになります!!
+4. latest.が使えるようになります!!
 
 ### 使用方法
 
