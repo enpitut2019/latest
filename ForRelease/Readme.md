@@ -1,12 +1,15 @@
 # latest.
 
-* enPit2019 チーム旬のどんぐりの作成したlatest.です。
-* 詳細は[こちら](https://github.com/enpitut2019/latest)
-
 ## 目次
 
+> * [latest.について](#latest.について)
 > * [インストールと拡張機能読み込み方法](#インストールと拡張機能読み込み方法)
 > * [使用方法](#使用方法)
+
+### latest.について
+
+* enPit2019 チーム旬のどんぐりの作成したlatest.です。
+* 詳細は[こちら](https://github.com/enpitut2019/latest)
 
 ### インストールと拡張機能読み込み方法
 
