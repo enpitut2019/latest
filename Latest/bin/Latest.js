@@ -309,13 +309,17 @@ class CommentManager {
                 if ($("#" + n.pin_node.id).is(":visible")) {
                     $("#" + n.pin_node.id).hide();
                 }
-                $(target_node).toggleClass("latest_button--six");
+                if (!$(target_node).hasClass("latest_button--six")) {
+                    $(target_node).addClass("latest_button--six");
+                }
             }
             else {
                 if ($("#" + n.pin_node.id).is(":hidden")) {
                     $("#" + n.pin_node.id).show();
                 }
-                $(target_node).toggleClass("latest_button--six");
+                if ($(target_node).hasClass("latest_button--six")) {
+                    $(target_node).removeClass("latest_button--six");
+                }
             }
         });
     }
@@ -687,6 +691,10 @@ class Share {
             this.comment_manager.loadComment(this.urlmanage);
             this.limit = true;
             setTimeout(this.setLimit, 1000);
+        }
+        const target_node = document.getElementsByClassName("latest_button--four");
+        if ($(target_node).hasClass("latest_button--six")) {
+            $(target_node).removeClass("latest_button--six");
         }
     }
     setLimit_false() {

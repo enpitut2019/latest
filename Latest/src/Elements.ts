@@ -377,12 +377,16 @@ class CommentManager{
                 if($("#"+n.pin_node.id).is(":visible")){
                     $("#"+n.pin_node.id).hide()
                 }
-                $(target_node).toggleClass("latest_button--six")
+                if (!$(target_node).hasClass("latest_button--six")){
+                    $(target_node).addClass("latest_button--six")
+                }
             }else{
                 if($("#"+n.pin_node.id).is(":hidden")){
                     $("#"+n.pin_node.id).show()
                 }
-                $(target_node).toggleClass("latest_button--six")
+                if ($(target_node).hasClass("latest_button--six")){
+                    $(target_node).removeClass("latest_button--six")
+                }
             }
         });
     }

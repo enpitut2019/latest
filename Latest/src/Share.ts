@@ -56,6 +56,10 @@ class Share{
             this.limit = true
             setTimeout(this.setLimit, 1000)
         }
+        const target_node = document.getElementsByClassName("latest_button--four")
+        if ($(target_node).hasClass("latest_button--six")){
+            $(target_node).removeClass("latest_button--six")
+        }
     }
 
     setLimit_false(){
