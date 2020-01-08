@@ -595,7 +595,7 @@ class Menu_Node {
         this.body = document.createElement("div");
         this.menu_class = "latest_menubar";
         this.uni_button_class = "latest_button";
-        this.button_n_list = ["one", "two", "three", "four", "five", "six", "seven"];
+        this.button_n_list = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nien", "ten", "eleven", "twelve", "thirteen", "fourteen"];
         this.button_index = 0;
         this.img_root = document.documentElement;
         this.img_count = 1;
@@ -779,6 +779,13 @@ window.onload = function () {
     menu.get_img("1_off.png");
     menu.get_img("4_off.png");
     menu.get_img("3_off.png");
+    menu.get_img("1_hover.png");
+    menu.get_img("2_hover.png");
+    menu.get_img("3_hover.png");
+    menu.get_img("4_hover.png");
+    menu.get_img("5_hover.png");
+    menu.get_img("6_hover.png");
+    menu.get_img("7_hover.png");
     // メニューバーを画面に追加
     menu.appendmenubar();
     if (share.current_sharenum == null) {

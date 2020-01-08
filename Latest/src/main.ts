@@ -45,6 +45,13 @@ window.onload = function(){
     menu.get_img("1_off.png")
     menu.get_img("4_off.png")
     menu.get_img("3_off.png")
+    menu.get_img("1_hover.png")
+    menu.get_img("2_hover.png")
+    menu.get_img("3_hover.png")
+    menu.get_img("4_hover.png")
+    menu.get_img("5_hover.png")
+    menu.get_img("6_hover.png")
+    menu.get_img("7_hover.png")
     // メニューバーを画面に追加
     menu.appendmenubar()
     if (share.current_sharenum == null){
