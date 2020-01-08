@@ -309,17 +309,13 @@ class CommentManager {
                 if ($("#" + n.pin_node.id).is(":visible")) {
                     $("#" + n.pin_node.id).hide();
                 }
-                if (!$(target_node).hasClass("latest_button--six")) {
-                    $(target_node).addClass("latest_button--six");
-                }
+                $(target_node).toggleClass("latest_button--six");
             }
             else {
                 if ($("#" + n.pin_node.id).is(":hidden")) {
                     $("#" + n.pin_node.id).show();
                 }
-                if ($(target_node).hasClass("latest_button--six")) {
-                    $(target_node).removeClass("latest_button--six");
-                }
+                $(target_node).toggleClass("latest_button--six");
             }
         });
     }
@@ -412,22 +408,19 @@ class DB {
     }
 }
 class Mode {
-    constructor(munu) {
+    constructor() {
         this.flag = "read";
         this.writing = false;
-        this.menu = menu;
     }
     /**
      * 状態を変更するための関数
      * @param command セットした状態
      */
     Change_mode(command) {
-        if (command == "none") {
-            this.menu.nondisplay_menubar();
+        if (command != "wirte" && command != "read") {
+            this.flag = "read";
         }
-        else {
-            this.menu.display_menubar();
-        }
+        this.flag = command;
     }
     /**
      * 指定したモードになっているかどうかを返す
@@ -634,22 +627,12 @@ class Menu_Node {
         this.img_count += 1;
         this.img_root.style.setProperty(css_img_id, target_img_url);
     }
-    display_menubar() {
-        console.log("ttt");
-        $('.' + this.menu_class).show();
-    }
-    nondisplay_menubar() {
-        console.log("nondisplay");
-        $('.' + this.menu_class).hide();
-    }
 }
 class Share {
     constructor(urlmanage, comment_manager) {
         this.urlmanage = urlmanage;
         this.comment_manager = comment_manager;
         this.current_sharenum = urlmanage.sharenum;
-        this.limit = false;
-        this.setLimit = this.setLimit_false.bind(this);
     }
     get_Sharenum() {
         this.urlmanage.getParam("sharenum");
@@ -670,10 +653,6 @@ class Share {
         return String(num);
     }
     Change_Share() {
-        console.log("DEBUG: Change_Share: limit = " + this.limit);
-        if (this.limit) {
-            return;
-        }
         this.Change_Share_img();
         if (this.current_sharenum == null) {
             this.Init_Share();
@@ -689,17 +668,7 @@ class Share {
                 this.urlmanage.sharenum = null;
             }
             this.comment_manager.loadComment(this.urlmanage);
-            this.limit = true;
-            setTimeout(this.setLimit, 1000);
         }
-        const target_node = document.getElementsByClassName("latest_button--four");
-        if ($(target_node).hasClass("latest_button--six")) {
-            $(target_node).removeClass("latest_button--six");
-        }
-    }
-    setLimit_false() {
-        this.limit = false;
-        console.log("DEBUG: setLimit: limit = " + this.limit);
     }
     Change_Share_img() {
         const target_node = document.getElementsByClassName("latest_button--three");
@@ -778,11 +747,11 @@ class Debug {
 /// <reference path = "Share.ts" />
 /// <reference path = "Debug.ts" />
 // 変数を宣言
-const menu = new Menu_Node();
-const mode = new Mode(menu);
+const mode = new Mode();
 const comment_manager = new CommentManager();
 const debug = new Debug();
 const form = new Form();
+const menu = new Menu_Node();
 const urlmanage = new URLManage();
 const share = new Share(urlmanage, comment_manager);
 // サイトを読み込んだときに実行

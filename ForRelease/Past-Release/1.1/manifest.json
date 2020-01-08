@@ -1,6 +1,6 @@
 {
     "name": "Latest_ver.beta-test",
-    "version": "0.5.2",
+    "version": "1.0.0",
     "manifest_version": 2,
     "description": "サイトにコメントを付与したり、追加したりする事ができる拡張です",
     "icons":{
@@ -16,10 +16,6 @@
     "browser_action":{
       "default_icon": "img/icon_32.png",
       "default_title": "Latestを起動する"
-    },
-    "background":{
-      "scripts" : ["bin/background.js"],
-      "persistent": false
     },
     "web_accessible_resources": [
       "*.png"
