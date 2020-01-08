@@ -3,11 +3,15 @@ class Share{
     urlmanage: URLManage
     comment_manager: CommentManager
     current_sharenum: string;
+    private limit: Boolean;
+    private setLimit: Function;
     
     constructor(urlmanage: URLManage, comment_manager: CommentManager) {
         this.urlmanage = urlmanage;
         this.comment_manager = comment_manager;
         this.current_sharenum = urlmanage.sharenum;
+        this.limit = false;
+        this.setLimit = this.setLimit_false.bind(this)
     }
 
     get_Sharenum(){
@@ -32,6 +36,10 @@ class Share{
     }
 
     Change_Share(){
+        console.log("DEBUG: Change_Share: limit = " + this.limit)
+        if (this.limit){
+            return;
+        }
         this.Change_Share_img()
         if (this.current_sharenum==null){
             this.Init_Share();
@@ -45,7 +53,14 @@ class Share{
                 this.urlmanage.sharenum = null
             }
             this.comment_manager.loadComment(this.urlmanage)
+            this.limit = true
+            setTimeout(this.setLimit, 1000)
         }
+    }
+
+    setLimit_false(){
+        this.limit = false
+        console.log("DEBUG: setLimit: limit = " + this.limit)
     }
 
     Change_Share_img(){
