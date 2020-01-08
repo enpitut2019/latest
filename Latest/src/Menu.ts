@@ -50,4 +50,14 @@ class Menu_Node{
         this.img_count += 1
         this.img_root.style.setProperty(css_img_id, target_img_url);
     }
+
+    display_menubar(){
+        console.log("ttt")
+        $('.'+this.menu_class).show()
+    }
+
+    nondisplay_menubar(){
+        console.log("nondisplay")
+        $('.'+this.menu_class).hide()
+    }
 }

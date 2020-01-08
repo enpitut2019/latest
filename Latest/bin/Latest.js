@@ -408,19 +408,22 @@ class DB {
     }
 }
 class Mode {
-    constructor() {
+    constructor(munu) {
         this.flag = "read";
         this.writing = false;
+        this.menu = menu;
     }
     /**
      * 状態を変更するための関数
      * @param command セットした状態
      */
     Change_mode(command) {
-        if (command != "wirte" && command != "read") {
-            this.flag = "read";
+        if (command == "none") {
+            this.menu.nondisplay_menubar();
         }
-        this.flag = command;
+        else {
+            this.menu.display_menubar();
+        }
     }
     /**
      * 指定したモードになっているかどうかを返す
@@ -627,6 +630,14 @@ class Menu_Node {
         this.img_count += 1;
         this.img_root.style.setProperty(css_img_id, target_img_url);
     }
+    display_menubar() {
+        console.log("ttt");
+        $('.' + this.menu_class).show();
+    }
+    nondisplay_menubar() {
+        console.log("nondisplay");
+        $('.' + this.menu_class).hide();
+    }
 }
 class Share {
     constructor(urlmanage, comment_manager) {
@@ -759,11 +770,11 @@ class Debug {
 /// <reference path = "Share.ts" />
 /// <reference path = "Debug.ts" />
 // 変数を宣言
-const mode = new Mode();
+const menu = new Menu_Node();
+const mode = new Mode(menu);
 const comment_manager = new CommentManager();
 const debug = new Debug();
 const form = new Form();
-const menu = new Menu_Node();
 const urlmanage = new URLManage();
 const share = new Share(urlmanage, comment_manager);
 // サイトを読み込んだときに実行

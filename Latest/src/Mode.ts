@@ -1,10 +1,12 @@
 class Mode{
     flag: string;
     writing: boolean;
+    menu: Menu_Node;
 
-    constructor(){
+    constructor(munu: Menu_Node){
         this.flag = "read";
         this.writing = false;
+        this.menu = menu;
     }
 
     /**
@@ -12,10 +14,11 @@ class Mode{
      * @param command セットした状態
      */
     Change_mode(command: string){
-        if (command != "wirte" && command != "read"){
-            this.flag = "read"
+        if(command=="none"){
+            this.menu.nondisplay_menubar()
+        }else{
+            this.menu.display_menubar()
         }
-        this.flag = command
     }
 
     /**

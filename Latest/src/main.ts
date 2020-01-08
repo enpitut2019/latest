@@ -10,11 +10,11 @@
 /// <reference path = "Debug.ts" />
 
 // 変数を宣言
-const mode = new Mode()
+const menu = new Menu_Node()
+const mode = new Mode(menu)
 const comment_manager = new CommentManager()
 const debug = new Debug()
 const form = new Form()
-const menu = new Menu_Node()
 const urlmanage = new URLManage()
 const share = new Share(urlmanage, comment_manager)
 
