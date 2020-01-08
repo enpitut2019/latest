@@ -13,7 +13,7 @@ class Menu_Node{
         this.body = document.createElement("div");
         this.menu_class = "latest_menubar"
         this.uni_button_class = "latest_button"
-        this.button_n_list = ["one", "two", "three", "four","five", "six", "seven"]
+        this.button_n_list = ["one", "two", "three", "four","five", "six", "seven","eight","nien","ten","eleven","twelve","thirteen","fourteen"]
         this.button_index = 0
         this.img_root = document.documentElement;
         this.img_count = 1
