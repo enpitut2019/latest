@@ -1,0 +1,63 @@
+.latest_pin {
+  position: relative;
+  display: inline-block;
+  margin: 1.5em 0;
+  padding: 7px 10px;
+  min-width: 15px;
+  max-width: 100%;
+  color: #555;
+  font-size: 5px;
+  background: #FFF;
+  border: solid 3px #555;
+  box-sizing: border-box;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.latest_pin:before {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top: 5px solid #FFF;
+}
+
+.latest_pin:after {
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  margin-left: -6px;
+  border: 6px solid transparent;
+  border-top: 6px solid #555;
+  z-index: 1;
+}
+
+.latest_pin p {
+  margin: 0;
+  padding: 0;
+}
+
+.latest_comment {
+  padding: 5px;
+  margin: 5px;
+  font-weight: bold;
+  border: solid 3px #000000;
+  background-color: white;
+  display: none;
+  color: black;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.latest_comment p {
+    margin: 0; 
+    padding: 0;
+}
+
+.latest_close {
+  cursor: pointer;
+  display: none;
+  z-index: 1002;
+}
