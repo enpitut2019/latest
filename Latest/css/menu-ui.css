@@ -61,11 +61,11 @@
     content: "";
     position: absolute;
     top: 48px;
-    left: 0;
+    left: -30px;
     display: inline-block;
     pointer-events: none;
-    width: 200px;
-    height: 39px;
+    width: 230px;
+    height: 70px;
   }
 
   .latest_button--one:hover:after{
@@ -85,11 +85,11 @@
     content: "";
     position: absolute;
     top: 48px;
-    left: 0px;
+    left: -50px;
     display: inline-block;
     pointer-events: none;
-    width: 200px;
-    height: 39px;
+    width: 250px;
+    height: 80px;
   }
 
   .latest_button--five:hover:after{
@@ -134,11 +134,11 @@
     content: "";
     position: absolute;
     top: 48px;
-    left: -100px;
+    left: -150px;
     display: inline-block;
     pointer-events: none;
-    width: 200px;
-    height: 39px;
+    width: 250px;
+    height: 80px;
   }
 
   .latest_button--three:hover:after{
@@ -158,11 +158,11 @@
     content: "";
     position: absolute;
     top: 48px;
-    left: -100px;
+    left: -150px;
     display: inline-block;
     pointer-events: none;
-    width: 200px;
-    height: 39px;
+    width: 250px;
+    height: 80px;
   }
 
   .latest_button--seven:hover:after{
@@ -206,11 +206,11 @@
     content: "";
     position: absolute;
     top: 48px;
-    left: -150px;
+    left: -200px;
     display: inline-block;
     pointer-events: none;
-    width: 200px;
-    height: 39px;
+    width: 250px;
+    height: 80px;
   }
 
   .latest_button--six:hover:after{
