@@ -21,6 +21,9 @@
 
 4. latest.が使えるようになります!!
 
+導入について説明した動画
+https://www.youtube.com/watch?v=Sa5NrLXjJCY&t=4s
+
 ### 使用方法
 
 #### メニューバーについて
